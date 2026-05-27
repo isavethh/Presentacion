@@ -1,0 +1,1533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JICHI — Observatorio de Seguridad Vial</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,200;0,400;0,700;0,900;1,300&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<style>
+/* ── RESET & BASE ────────────────────────────────────────────── */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html, body {
+  width:100%; height:100%;
+  background:#08091f;
+  color:#fff;
+  font-family:'Montserrat', sans-serif;
+  overflow:hidden;
+  user-select:none;
+}
+
+/* ── SLIDE SYSTEM ────────────────────────────────────────────── */
+.deck { width:100vw; height:100vh; position:relative; }
+
+.slide {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .7s ease, transform .7s ease;
+  transform:translateY(30px);
+  overflow:hidden;
+}
+.slide.active {
+  opacity:1; pointer-events:all;
+  transform:translateY(0);
+}
+.slide.out {
+  opacity:0; transform:translateY(-30px);
+}
+
+/* ── NAV DOTS ────────────────────────────────────────────────── */
+.nav-dots {
+  position:fixed; bottom:28px; left:50%; transform:translateX(-50%);
+  display:flex; gap:10px; z-index:100;
+}
+.nav-dots span {
+  width:9px; height:9px; border-radius:50%;
+  background:rgba(255,255,255,.45);
+  cursor:pointer; transition:all .3s;
+}
+.nav-dots span.active { background:#f5a623; transform:scale(1.4); }
+
+/* ── CANVAS (particles) ───────────────────────────────────────── */
+canvas.bg { position:absolute; inset:0; opacity:.5; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* SLIDE 1 — IMPACTO */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#s1 { background: radial-gradient(ellipse at 50% 55%, #3d0c0c 0%, #1f0515 45%, #08091f 100%); }
+
+.s1-canvas { position:absolute; inset:0; }
+
+.s1-content {
+  position:relative; z-index:10;
+  text-align:center;
+  animation: fadeUp .8s .2s both;
+}
+
+.s1-number {
+  font-size:clamp(140px, 24vw, 240px);
+  font-weight:900;
+  line-height:1;
+  color:#ff4455;
+  text-shadow: 0 0 60px rgba(255,68,85,.9), 0 0 120px rgba(255,68,85,.5), 0 0 200px rgba(255,68,85,.2);
+  letter-spacing:-4px;
+  font-family:'Playfair Display', serif;
+}
+.s1-unit {
+  font-size:clamp(18px, 3vw, 32px);
+  font-weight:600;
+  letter-spacing:8px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.85);
+  margin-top:6px;
+}
+.s1-divider {
+  width:120px; height:2px;
+  background:linear-gradient(90deg, transparent, #ff4455, transparent);
+  margin:28px auto;
+}
+.s1-sub {
+  font-size:clamp(18px, 2.8vw, 32px);
+  font-weight:700;
+  color:#fff;
+  letter-spacing:.5px;
+  line-height:1.5;
+}
+.s1-sub em {
+  color:#ffb347;
+  font-style:normal;
+}
+.s1-bottom {
+  margin-top:24px;
+  font-size:clamp(14px, 1.7vw, 19px);
+  color:rgba(255,255,255,.75);
+  font-weight:600;
+  letter-spacing:3px;
+  text-transform:uppercase;
+}
+
+/* pulse ring */
+.pulse-ring {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  pointer-events:none;
+}
+.pulse-ring::before, .pulse-ring::after {
+  content:'';
+  position:absolute;
+  border-radius:50%;
+  border:1.5px solid rgba(255,68,85,.4);
+  animation: pulse-expand 3s ease-out infinite;
+}
+.pulse-ring::before { width:500px; height:500px; animation-delay:0s; }
+.pulse-ring::after  { width:800px; height:800px; animation-delay:1.2s; }
+
+@keyframes pulse-expand {
+  0%   { transform:scale(.5); opacity:.6; }
+  100% { transform:scale(1.4); opacity:0; }
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* SLIDE 2 — MAPA SANTA CRUZ */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#s2 { background: radial-gradient(ellipse at 40% 50%, #062040 0%, #0d1e3a 50%, #08091f 100%); }
+
+.s2-layout {
+  display:flex; align-items:center; justify-content:center;
+  gap:clamp(30px, 5vw, 80px);
+  width:100%; padding:0 5vw;
+  position:relative; z-index:10;
+  animation: fadeUp .8s .2s both;
+}
+
+/* Santa Cruz real map */
+.sc-map {
+  flex-shrink:0;
+  position:relative;
+  width:clamp(320px, 44vw, 600px);
+  height:clamp(320px, 44vw, 560px);
+  border-radius:20px;
+  overflow:hidden;
+  box-shadow:0 0 80px rgba(50,150,230,.55), 0 0 0 2px rgba(80,160,255,.35);
+}
+#sc-leaflet-map {
+  width:100%; height:100%;
+  border-radius:20px;
+}
+/* Override Leaflet controls for dark theme */
+.leaflet-control-zoom a {
+  background:#111 !important;
+  color:#fff !important;
+  border-color:#333 !important;
+}
+.leaflet-control-attribution {
+  background:rgba(0,0,0,.5) !important;
+  color:rgba(255,255,255,.3) !important;
+  font-size:9px !important;
+}
+.leaflet-control-attribution a { color:rgba(255,255,255,.78) !important; }
+
+/* Pulsing accident markers */
+.acc-marker {
+  width:14px; height:14px;
+  border-radius:50%;
+  position:relative;
+}
+.acc-marker.high  { background:#e63946; box-shadow:0 0 8px #e63946; }
+.acc-marker.med   { background:#f5a623; box-shadow:0 0 8px #f5a623; }
+.acc-marker::after {
+  content:'';
+  position:absolute;
+  inset:-6px;
+  border-radius:50%;
+  border:2px solid currentColor;
+  animation:marker-pulse 2s ease-out infinite;
+}
+.acc-marker.high::after { border-color:#e63946; }
+.acc-marker.med::after  { border-color:#f5a623; }
+@keyframes marker-pulse {
+  0%   { transform:scale(.4); opacity:.8; }
+  100% { transform:scale(2.2); opacity:0; }
+}
+
+.s2-text { max-width:400px; }
+.s2-label {
+  font-size:clamp(11px, 1.2vw, 14px);
+  font-weight:700;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  color:#f5a623;
+  margin-bottom:16px;
+}
+.s2-headline {
+  font-size:clamp(26px, 4vw, 52px);
+  font-weight:900;
+  line-height:1.1;
+  margin-bottom:20px;
+  font-family:'Playfair Display', serif;
+}
+.s2-headline span { color:#e63946; }
+.s2-body {
+  font-size:clamp(14px, 1.5vw, 18px);
+  color:rgba(255,255,255,.82);
+  line-height:1.8;
+  font-weight:500;
+}
+.s2-stat {
+  margin-top:24px;
+  display:flex; align-items:baseline; gap:12px;
+}
+.s2-stat-num {
+  font-size:clamp(36px, 5vw, 68px);
+  font-weight:900;
+  color:#ffb347;
+  line-height:1;
+  font-family:'Playfair Display', serif;
+  text-shadow:0 0 40px rgba(255,179,71,.5);
+}
+.s2-stat-label {
+  font-size:clamp(13px, 1.3vw, 16px);
+  color:rgba(255,255,255,.7);
+  line-height:1.4;
+  font-weight:600;
+  max-width:200px;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* SLIDE 3 — EL PROBLEMA */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#s3 { background: radial-gradient(ellipse at 50% 35%, #22082e 0%, #160828 50%, #08091f 100%); }
+
+.s3-content {
+  position:relative; z-index:10;
+  text-align:center;
+  width:100%; padding:0 5vw;
+  animation: fadeUp .8s .2s both;
+}
+.s3-label {
+  font-size:clamp(11px, 1.2vw, 14px);
+  font-weight:700; letter-spacing:5px;
+  text-transform:uppercase; color:#e63946;
+  margin-bottom:20px;
+}
+.s3-headline {
+  font-size:clamp(28px, 4.5vw, 58px);
+  font-weight:900; line-height:1.1;
+  font-family:'Playfair Display', serif;
+  margin-bottom:12px;
+}
+.s3-sub {
+  font-size:clamp(15px, 1.7vw, 20px);
+  color:rgba(255,255,255,.8);
+  font-weight:500; margin-bottom:40px;
+  max-width:700px; margin-left:auto; margin-right:auto;
+  line-height:1.7;
+}
+
+.silos {
+  display:flex; justify-content:center; align-items:center;
+  gap:clamp(16px, 3vw, 40px);
+  flex-wrap:wrap;
+}
+.silo {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:clamp(20px, 2.5vw, 32px) clamp(20px, 3vw, 40px);
+  min-width:clamp(130px, 16vw, 200px);
+  position:relative;
+  animation: silo-appear 0s both;
+}
+.silo:nth-child(1) { animation-delay:.1s; }
+.silo:nth-child(3) { animation-delay:.3s; }
+.silo:nth-child(5) { animation-delay:.5s; }
+
+.silo-icon {
+  font-size:clamp(28px, 3.5vw, 44px);
+  margin-bottom:12px;
+  display:block;
+}
+.silo-name {
+  font-size:clamp(11px, 1.3vw, 15px);
+  font-weight:700; text-transform:uppercase;
+  letter-spacing:2px; color:rgba(255,255,255,.8);
+}
+.silo-tag {
+  margin-top:10px;
+  font-size:clamp(10px, 1vw, 13px);
+  color:rgba(255,255,255,.75);
+  font-weight:500;
+}
+.silo-wall {
+  position:absolute; inset:0;
+  border-radius:16px;
+  border:2px solid rgba(230,57,70,.3);
+  animation: silo-glow 3s ease-in-out infinite;
+}
+@keyframes silo-glow {
+  0%,100% { border-color:rgba(230,57,70,.2); box-shadow:none; }
+  50%      { border-color:rgba(230,57,70,.5); box-shadow:0 0 20px rgba(230,57,70,.15); }
+}
+
+.silo-gap {
+  display:flex; flex-direction:column; align-items:center;
+  gap:6px; color:rgba(230,57,70,.5);
+  font-size:clamp(20px, 2.5vw, 30px);
+}
+.gap-line {
+  width:clamp(30px, 4vw, 60px); height:1px;
+  background:linear-gradient(90deg, transparent, rgba(230,57,70,.3), transparent);
+}
+.gap-x {
+  font-size:clamp(18px, 2vw, 26px);
+  color:rgba(230,57,70,.6);
+  font-weight:900;
+}
+
+.s3-quote {
+  margin-top:32px;
+  font-size:clamp(15px, 2vw, 22px);
+  font-style:italic;
+  color:rgba(255,255,255,.7);
+  font-weight:500;
+}
+.s3-quote strong { color:#fff; font-style:normal; font-weight:800; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* SLIDE 4 — JICHI */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#s4 { background: radial-gradient(ellipse at 50% 50%, #1e1500 0%, #1a1005 45%, #08091f 100%); }
+
+.s4-content {
+  position:relative; z-index:10;
+  text-align:center;
+  animation: fadeUp .8s .2s both;
+}
+
+.jichi-emblem {
+  position:relative;
+  width:clamp(160px, 22vw, 280px);
+  height:clamp(160px, 22vw, 280px);
+  margin:0 auto 36px;
+}
+.jichi-emblem svg { width:100%; height:100%; }
+
+.jichi-name {
+  font-size:clamp(72px, 13vw, 155px);
+  font-weight:900;
+  font-family:'Playfair Display', serif;
+  letter-spacing:-2px;
+  line-height:1;
+  background: linear-gradient(135deg, #ffe566 0%, #ffcc33 30%, #ffaa00 65%, #ff7700 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  text-shadow:none;
+  filter: drop-shadow(0 0 60px rgba(255,180,0,.7));
+}
+.jichi-tagline {
+  font-size:clamp(13px, 1.8vw, 20px);
+  font-weight:600;
+  letter-spacing:5px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.75);
+  margin-top:10px;
+}
+.jichi-desc {
+  margin-top:32px;
+  font-size:clamp(17px, 2.1vw, 25px);
+  font-weight:600;
+  color:#fff;
+  max-width:640px;
+  margin-left:auto; margin-right:auto;
+  line-height:1.6;
+}
+.jichi-desc em {
+  color:#ffcc33; font-style:normal;
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* SLIDE 5 — CÓMO FUNCIONA */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#s5 { background: radial-gradient(ellipse at 50% 50%, #0c1e3a 0%, #0d1a30 50%, #08091f 100%); }
+
+.s5-content {
+  position:relative; z-index:10;
+  width:100%; padding:0 4vw;
+  animation: fadeUp .8s .2s both;
+}
+.s5-label {
+  font-size:clamp(11px, 1.2vw, 14px);
+  font-weight:700; letter-spacing:5px;
+  text-transform:uppercase; color:#f5a623;
+  text-align:center; margin-bottom:12px;
+}
+.s5-headline {
+  font-size:clamp(26px, 4vw, 50px);
+  font-weight:900; line-height:1.1;
+  text-align:center; margin-bottom:40px;
+  font-family:'Playfair Display', serif;
+}
+
+.flow {
+  display:flex; align-items:center; justify-content:center;
+  gap:clamp(8px, 2vw, 20px);
+  flex-wrap:wrap;
+}
+.flow-node {
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.2);
+  border-radius:16px;
+  padding:clamp(16px, 2vw, 24px);
+  text-align:center;
+  min-width:clamp(110px, 13vw, 160px);
+}
+.flow-node.source {
+  background:rgba(80,130,230,.13);
+  border-color:rgba(100,160,255,.55);
+  box-shadow:0 0 20px rgba(100,160,255,.08);
+}
+.flow-node.center {
+  background: linear-gradient(135deg, rgba(255,179,71,.22) 0%, rgba(245,166,35,.1) 100%);
+  border-color:rgba(255,179,71,.8);
+  min-width:clamp(140px, 16vw, 200px);
+  box-shadow:0 0 50px rgba(255,179,71,.25), inset 0 0 20px rgba(255,179,71,.05);
+}
+.flow-node.output {
+  background:rgba(0,200,83,.12);
+  border-color:rgba(0,220,100,.55);
+  box-shadow:0 0 20px rgba(0,200,83,.1);
+}
+.fn-icon { font-size:clamp(22px, 3vw, 36px); margin-bottom:8px; display:block; }
+.fn-name {
+  font-size:clamp(13px, 1.4vw, 16px);
+  font-weight:700; text-transform:uppercase;
+  letter-spacing:1.5px; color:#fff;
+}
+.fn-detail {
+  font-size:clamp(12px, 1.2vw, 14px);
+  color:rgba(255,255,255,.88);
+  margin-top:6px; font-weight:500;
+  line-height:1.5;
+}
+/* Lucide icons styling */
+.lc {
+  display:block; margin:0 auto 12px;
+  flex-shrink:0;
+}
+.lc svg { display:block; }
+.spc-icon {
+  position:absolute; top:14px; right:14px;
+  opacity:.7;
+  z-index:2;
+}
+
+.flow-arrow {
+  color:rgba(100,160,255,.6);
+  font-size:clamp(18px, 2.2vw, 30px);
+  flex-shrink:0;
+}
+.flow-arrow.gold { color:rgba(255,179,71,.8); }
+
+.flow-sources {
+  display:flex; flex-direction:column; gap:clamp(8px, 1.2vw, 14px);
+}
+
+.s5-outputs {
+  display:flex; justify-content:center;
+  gap:clamp(10px, 2vw, 20px);
+  margin-top:clamp(24px, 3vw, 40px);
+  flex-wrap:wrap;
+}
+.output-card {
+  background:rgba(0,200,83,.07);
+  border:1px solid rgba(0,200,83,.25);
+  border-radius:12px;
+  padding:clamp(14px, 1.5vw, 18px) clamp(18px, 2vw, 26px);
+  font-size:clamp(13px, 1.4vw, 16px);
+  font-weight:600;
+  color:#fff;
+  display:flex; align-items:center; gap:12px;
+  letter-spacing:.3px;
+}
+
+/* ── PHOTO CARDS (slide 3) ───────────────────────────────── */
+.silo-photo-card {
+  position:relative; overflow:hidden;
+  border-radius:18px;
+  min-width:clamp(185px, 22vw, 260px);
+  height:clamp(185px, 21vw, 240px);
+  flex-shrink:0;
+}
+/* Foto como img con object-fit */
+.spc-photo {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; object-position:center;
+  filter:brightness(.80) saturate(.95) contrast(1.06);
+  transition:filter .5s;
+}
+.silo-photo-card:hover .spc-photo {
+  filter:brightness(.95) saturate(1.1) contrast(1.08);
+}
+/* Overlay ligero — solo abajo para el texto */
+.spc-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(175deg, rgba(8,9,31,.0) 25%, rgba(8,9,31,.78) 100%);
+}
+/* Borde de neón por institución */
+.silo-photo-card.police {
+  border:2px solid #5aabff;
+  box-shadow:0 0 0 1px rgba(90,171,255,.1), 0 0 22px rgba(90,171,255,.7), 0 0 55px rgba(90,171,255,.3);
+}
+.silo-photo-card.police::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:4;
+  background:linear-gradient(90deg, transparent, #5aabff 30%, #aad4ff 50%, #5aabff 70%, transparent);
+}
+.silo-photo-card.gov {
+  border:2px solid #ffb347;
+  box-shadow:0 0 0 1px rgba(255,179,71,.1), 0 0 22px rgba(255,179,71,.6), 0 0 55px rgba(255,179,71,.25);
+}
+.silo-photo-card.gov::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:4;
+  background:linear-gradient(90deg, transparent, #ffb347 30%, #ffe0a0 50%, #ffb347 70%, transparent);
+}
+.silo-photo-card.hospital {
+  border:2px solid #ff5a6e;
+  box-shadow:0 0 0 1px rgba(255,90,110,.1), 0 0 22px rgba(255,90,110,.7), 0 0 55px rgba(255,90,110,.3);
+}
+.silo-photo-card.hospital::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:4;
+  background:linear-gradient(90deg, transparent, #ff5a6e 30%, #ffaaaa 50%, #ff5a6e 70%, transparent);
+}
+.spc-content {
+  position:relative; z-index:2;
+  height:100%; padding:clamp(16px,2vw,22px) clamp(18px,2.2vw,26px);
+  display:flex; flex-direction:column; justify-content:flex-end;
+}
+.spc-name {
+  font-size:clamp(15px, 1.6vw, 19px);
+  font-weight:800; text-transform:uppercase;
+  letter-spacing:2px; color:#fff; margin-bottom:6px;
+}
+.spc-detail {
+  font-size:clamp(12px, 1.2vw, 14px);
+  color:rgba(255,255,255,.9); font-weight:600; line-height:1.4;
+}
+.spc-icon { position:absolute; top:14px; right:14px; opacity:.9; z-index:3; }
+/* SVG icon style for flow nodes */
+.fn-svg {
+  display:block; margin:0 auto 10px;
+  color:rgba(255,255,255,.7);
+}
+
+/* ── SLIDE 5 PIPELINE INFOGRAPHIC ─────────────────────── */
+.pipe {
+  display:flex; align-items:center; justify-content:center;
+  gap:clamp(6px,1.6vw,22px); width:100%;
+}
+.pipe-col { display:flex; flex-direction:column; gap:clamp(8px,1vw,12px); width:clamp(155px,18vw,220px); }
+.pipe-col-head {
+  font-size:clamp(10px,1vw,12px); font-weight:700;
+  text-transform:uppercase; letter-spacing:2px;
+  padding-bottom:10px; border-bottom:1.5px solid;
+  text-align:center; margin-bottom:2px; opacity:.8;
+}
+.pipe-card {
+  background:rgba(255,255,255,.07);
+  border:1.5px solid var(--c, rgba(255,255,255,.2));
+  border-radius:14px; padding:clamp(10px,1.3vw,16px);
+  display:flex; align-items:center; gap:12px;
+  box-shadow:0 2px 16px rgba(0,0,0,.25);
+}
+.pipe-icon {
+  width:46px; height:46px; border-radius:12px;
+  background:rgba(255,255,255,.09);
+  border:1px solid rgba(255,255,255,.12);
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.pipe-info strong {
+  display:block; font-size:clamp(12px,1.3vw,15px);
+  font-weight:800; color:#fff; letter-spacing:.4px;
+}
+.pipe-info span {
+  display:block; font-size:clamp(10px,1.05vw,12px);
+  color:rgba(255,255,255,.72); font-weight:500;
+  margin-top:3px; line-height:1.4;
+}
+.pipe-connector { display:flex; align-items:center; flex-shrink:0; }
+.pipe-center {
+  flex-shrink:0;
+  width:clamp(105px,13vw,160px); height:clamp(105px,13vw,160px);
+  border-radius:50%;
+  background:radial-gradient(circle, rgba(255,179,71,.18) 0%, rgba(255,179,71,.05) 100%);
+  border:2px solid rgba(255,179,71,.75);
+  box-shadow:0 0 50px rgba(255,179,71,.35), inset 0 0 20px rgba(255,179,71,.06);
+  display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:4px;
+}
+.pipe-center-eye { margin-bottom:2px; }
+.pipe-center-name {
+  font-size:clamp(16px,2.2vw,26px); font-weight:900;
+  font-family:'Playfair Display',serif;
+  background:linear-gradient(135deg,#ffe566,#ffaa00);
+  -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
+  line-height:1; filter:drop-shadow(0 0 10px rgba(255,180,0,.5));
+}
+.pipe-center-sub {
+  font-size:clamp(8px,.9vw,10px); color:rgba(255,179,71,.85);
+  font-weight:700; text-transform:uppercase; letter-spacing:2px;
+}
+.pipe-output {
+  background:rgba(0,230,118,.09);
+  border:1.5px solid rgba(0,230,118,.45);
+  border-radius:14px; padding:clamp(10px,1.3vw,16px);
+  display:flex; align-items:center; gap:12px;
+  box-shadow:0 2px 14px rgba(0,0,0,.2);
+}
+.pipe-num {
+  font-size:clamp(20px,2.6vw,32px); font-weight:900;
+  font-family:'Playfair Display',serif;
+  color:#00e676; line-height:1; flex-shrink:0; width:38px; text-align:center;
+  text-shadow:0 0 12px rgba(0,230,118,.5);
+}
+.s5-pills {
+  display:flex; justify-content:center; gap:clamp(8px,1.5vw,16px);
+  margin-top:clamp(18px,2.5vw,30px); flex-wrap:wrap;
+}
+.s5-pill {
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:999px;
+  padding:clamp(8px,1vw,12px) clamp(16px,2vw,24px);
+  font-size:clamp(12px,1.3vw,15px); font-weight:700;
+  color:#fff; display:flex; align-items:center; gap:9px; letter-spacing:.3px;
+}
+.s5-pill svg { flex-shrink:0; }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* SLIDE 6 — IMPACTO */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#s6 { background: radial-gradient(ellipse at 50% 50%, #062010 0%, #082816 45%, #08091f 100%); }
+
+.s6-content {
+  position:relative; z-index:10;
+  text-align:center;
+  animation: fadeUp .8s .2s both;
+}
+.s6-label {
+  font-size:clamp(11px, 1.2vw, 14px);
+  font-weight:700; letter-spacing:5px;
+  text-transform:uppercase; color:#00c853;
+  margin-bottom:20px;
+}
+.s6-big {
+  font-size:clamp(90px, 17vw, 200px);
+  font-weight:900; line-height:1;
+  font-family:'Playfair Display', serif;
+  color:#00e676;
+  text-shadow: 0 0 60px rgba(0,230,118,1), 0 0 120px rgba(0,230,118,.5), 0 0 220px rgba(0,230,118,.2);
+  filter: drop-shadow(0 0 40px rgba(0,230,118,.6));
+}
+.s6-plus {
+  font-size:clamp(40px, 7vw, 90px);
+  color:rgba(0,230,118,.9);
+}
+.s6-unit {
+  font-size:clamp(22px, 3.5vw, 44px);
+  font-weight:700;
+  color:#fff;
+  margin-top:8px;
+}
+.s6-sub {
+  margin-top:14px;
+  font-size:clamp(15px, 1.7vw, 21px);
+  color:rgba(255,255,255,.8);
+  font-weight:500; line-height:1.7;
+  max-width:620px; margin-left:auto; margin-right:auto;
+}
+.s6-sub strong { color:#00e676; font-weight:800; }
+
+.s6-stats {
+  display:flex; justify-content:center;
+  gap:clamp(20px, 4vw, 60px);
+  margin-top:40px;
+}
+.s6-stat { text-align:center; }
+.s6-stat-n {
+  font-size:clamp(30px, 4.5vw, 58px);
+  font-weight:900; color:#ffb347;
+  font-family:'Playfair Display', serif;
+  text-shadow:0 0 30px rgba(255,179,71,.5);
+}
+.s6-stat-l {
+  font-size:clamp(12px, 1.3vw, 15px);
+  color:rgba(255,255,255,.7);
+  font-weight:600; margin-top:5px;
+  text-transform:uppercase; letter-spacing:2px;
+}
+.s6-bar-wrap {
+  margin-top:32px;
+  width:min(500px, 80vw);
+  margin-left:auto; margin-right:auto;
+}
+.s6-bar-label {
+  display:flex; justify-content:space-between;
+  font-size:clamp(11px, 1.2vw, 13px);
+  color:rgba(255,255,255,.78);
+  margin-bottom:8px;
+}
+.s6-bar-track {
+  height:10px; border-radius:99px;
+  background:rgba(255,255,255,.08);
+  overflow:hidden;
+}
+.s6-bar-fill {
+  height:100%; border-radius:99px;
+  background:linear-gradient(90deg, #e63946, #f5a623 50%, #00c853);
+  width:0%;
+  transition: width 1.5s cubic-bezier(.2,.8,.3,1);
+}
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* SLIDE 7 — CIERRE / JICHI GUARDIAN */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+#s7 {
+  background: radial-gradient(ellipse at 50% 65%, #0d2808 0%, #0e2006 50%, #08091f 100%);
+}
+
+.s7-bg-art {
+  position:absolute; inset:0;
+  pointer-events:none; overflow:hidden;
+}
+
+.s7-content {
+  position:relative; z-index:10;
+  text-align:center;
+  animation: fadeUp .8s .2s both;
+  max-width:800px;
+  padding:0 5vw;
+}
+
+.s7-prelude {
+  font-size:clamp(13px, 1.5vw, 17px);
+  font-weight:500; font-style:italic;
+  color:rgba(255,255,255,.78);
+  letter-spacing:2px;
+  margin-bottom:24px;
+}
+.s7-culture {
+  font-size:clamp(18px, 2.5vw, 30px);
+  font-weight:500;
+  color:rgba(255,255,255,.7);
+  line-height:1.7;
+  margin-bottom:36px;
+}
+.s7-culture strong {
+  color:#f5a623;
+  font-weight:700;
+  display:block;
+  font-size:1.15em;
+}
+
+.s7-name {
+  font-size:clamp(90px, 17vw, 200px);
+  font-weight:900;
+  font-family:'Playfair Display', serif;
+  line-height:1;
+  background: linear-gradient(160deg, #d4f56a 0%, #7ed321 35%, #3aaa35 70%, #1a6b1a 100%);
+  -webkit-background-clip:text; background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter: drop-shadow(0 0 60px rgba(126,211,33,.6));
+  margin-bottom:16px;
+}
+.s7-name-sub {
+  font-size:clamp(13px, 1.5vw, 17px);
+  letter-spacing:8px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.6);
+  font-weight:600;
+  margin-bottom:32px;
+}
+.s7-final {
+  font-size:clamp(16px, 2vw, 23px);
+  font-weight:700;
+  color:#fff;
+  line-height:1.6;
+}
+.s7-final em { color:#b8f04a; font-style:normal; }
+.s7-culture { color:#fff; }
+.s7-prelude { color:rgba(255,255,255,.65); font-size:clamp(14px,1.6vw,18px); }
+
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+/* GLOBAL ANIMATIONS */
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(24px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+@keyframes silo-appear {
+  from { opacity:0; transform:scale(.9); }
+  to   { opacity:1; transform:scale(1); }
+}
+@keyframes float {
+  0%,100% { transform:translateY(0); }
+  50%      { transform:translateY(-12px); }
+}
+@keyframes spin-slow {
+  from { transform:rotate(0deg); }
+  to   { transform:rotate(360deg); }
+}
+@keyframes dash {
+  to { stroke-dashoffset:0; }
+}
+@keyframes blink-dot {
+  0%,100% { opacity:1; r:4; }
+  50%      { opacity:.3; r:6; }
+}
+
+/* Hint */
+.hint {
+  position:fixed; bottom:60px; right:28px;
+  font-size:12px; color:rgba(255,255,255,.2);
+  letter-spacing:2px; text-transform:uppercase;
+  pointer-events:none;
+}
+</style>
+</head>
+<body>
+
+<div class="deck">
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 1 — 409 MUERTES -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="slide active" id="s1">
+  <div class="pulse-ring"></div>
+  <canvas class="s1-canvas" id="c1"></canvas>
+
+  <div class="s1-content">
+    <div class="s1-number" id="counter1">409</div>
+    <div class="s1-unit">muertes al año</div>
+    <div class="s1-divider"></div>
+    <div class="s1-sub">
+      Un accidente cada <em>50 minutos</em><br>
+      en Santa Cruz de la Sierra
+    </div>
+    <div class="s1-bottom" style="margin-top:32px; opacity:.6;">
+      Santa Cruz concentra <em style="color:#f5a623; font-style:normal;">más de la mitad</em><br>
+      de todos los siniestros del país
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 2 — MAPA SANTA CRUZ -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="slide" id="s2">
+  <div class="s2-layout">
+    <!-- Mapa real de Santa Cruz de la Sierra -->
+    <div class="sc-map">
+      <div id="sc-leaflet-map"></div>
+    </div>
+
+    <!-- Text panel -->
+    <div class="s2-text">
+      <div class="s2-label">El mapa del riesgo</div>
+      <h2 class="s2-headline">Cada punto rojo<br>es <span>un punto</span><br>que se repite</h2>
+      <p class="s2-body">Los mismos cruces. Las mismas horas. Las mismas razones.<br>Los datos existen. El problema es que nadie los conecta.</p>
+      <div class="s2-stat">
+        <div class="s2-stat-num">+50%</div>
+        <div class="s2-stat-label">de los siniestros nacionales ocurren aquí</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 3 — EL PROBLEMA -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="slide" id="s3">
+  <div class="s3-content">
+    <div class="s3-label">El problema</div>
+    <h2 class="s3-headline">Los datos están.<br>Nadie los cruza.</h2>
+    <p class="s3-sub">La Policía registra accidentes. El Municipio conoce las calles en mal estado.<br>Los hospitales cuentan cada herido. Pero cada institución trabaja sola.</p>
+
+    <div class="silos">
+      <!-- Policía Boliviana -->
+      <div class="silo-photo-card police">
+        <img class="spc-photo" id="img-policia"
+             src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Policia_Boliviana.jpg/480px-Policia_Boliviana.jpg"
+             alt="Policía Boliviana">
+        <div class="spc-overlay"></div>
+        <div class="spc-icon">
+          <i data-lucide="shield-check" style="width:28px;height:28px;stroke:#5aabff;stroke-width:2;"></i>
+        </div>
+        <div class="spc-content">
+          <div class="spc-name">Policía</div>
+          <div class="spc-detail">Registra cada accidente</div>
+        </div>
+      </div>
+
+      <div class="silo-gap">
+        <div class="gap-line"></div>
+        <div class="gap-x">✕</div>
+        <div class="gap-line"></div>
+      </div>
+
+      <!-- Municipio de Santa Cruz -->
+      <div class="silo-photo-card gov">
+        <img class="spc-photo" id="img-municipio"
+             src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Alcald%C3%ADa_de_Santa_Cruz_de_la_Sierra_%28Bolivia%29.jpg/480px-Alcald%C3%ADa_de_Santa_Cruz_de_la_Sierra_%28Bolivia%29.jpg"
+             alt="Alcaldía Santa Cruz de la Sierra">
+        <div class="spc-overlay"></div>
+        <div class="spc-icon">
+          <i data-lucide="landmark" style="width:28px;height:28px;stroke:#ffb347;stroke-width:2;"></i>
+        </div>
+        <div class="spc-content">
+          <div class="spc-name">Municipio</div>
+          <div class="spc-detail">Conoce el estado de calles</div>
+        </div>
+      </div>
+
+      <div class="silo-gap">
+        <div class="gap-line"></div>
+        <div class="gap-x">✕</div>
+        <div class="gap-line"></div>
+      </div>
+
+      <!-- Hospital Bolivia -->
+      <div class="silo-photo-card hospital">
+        <img class="spc-photo" id="img-hospital"
+             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Hospital_Japon%C3%A9s_de_Santa_Cruz_de_la_Sierra.jpg/480px-Hospital_Japon%C3%A9s_de_Santa_Cruz_de_la_Sierra.jpg"
+             alt="Hospital Japonés Santa Cruz">
+        <div class="spc-overlay"></div>
+        <div class="spc-icon">
+          <i data-lucide="cross" style="width:28px;height:28px;stroke:#ff5a6e;stroke-width:2;"></i>
+        </div>
+        <div class="spc-content">
+          <div class="spc-name">Hospitales</div>
+          <div class="spc-detail">Registran cada herido</div>
+        </div>
+      </div>
+    </div>
+
+    <p class="s3-quote">
+      Mientras eso pasa, la gente sigue muriendo<br>
+      <strong>en los mismos puntos, por las mismas razones, año tras año.</strong>
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 4 — JICHI: LA SOLUCIÓN -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="slide" id="s4">
+  <div class="s4-content">
+
+    <!-- Emblema del Jichi -->
+    <div class="jichi-emblem">
+      <svg viewBox="-120 -120 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="jg1" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#f5a623" stop-opacity=".25"/>
+            <stop offset="100%" stop-color="#f5a623" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Outer glow -->
+        <circle cx="0" cy="0" r="110" fill="url(#jg1)"/>
+
+        <!-- Rotating outer ring -->
+        <circle cx="0" cy="0" r="95" stroke="#f5a623" stroke-width="1" stroke-opacity=".3"
+          stroke-dasharray="8 6"
+          style="animation:spin-slow 20s linear infinite; transform-origin:center;"/>
+
+        <!-- Wave / water spirit rings -->
+        <ellipse cx="0" cy="0" rx="70" ry="30" stroke="#f5a623" stroke-width="1.5" stroke-opacity=".6"
+          style="animation:spin-slow 8s linear infinite; transform-origin:center;"/>
+        <ellipse cx="0" cy="0" rx="70" ry="30" stroke="#f5a623" stroke-width="1" stroke-opacity=".3"
+          style="animation:spin-slow 12s linear infinite reverse; transform-origin:center;"/>
+
+        <!-- Core circle -->
+        <circle cx="0" cy="0" r="42" fill="rgba(245,166,35,.12)" stroke="#f5a623" stroke-width="2"/>
+
+        <!-- Eye of Jichi -->
+        <ellipse cx="0" cy="-4" rx="18" ry="12" fill="rgba(245,166,35,.2)" stroke="#f5a623" stroke-width="1.5"/>
+        <circle cx="0" cy="-4" r="7" fill="#f5a623" fill-opacity=".8"/>
+        <circle cx="0" cy="-4" r="3.5" fill="#fff" fill-opacity=".9"/>
+
+        <!-- Rays -->
+        <g stroke="#f5a623" stroke-width="1" stroke-opacity=".4">
+          <line x1="0" y1="-95" x2="0" y2="-50"/>
+          <line x1="0" y1="50" x2="0" y2="95"/>
+          <line x1="-95" y1="0" x2="-50" y2="0"/>
+          <line x1="50" y1="0" x2="95" y2="0"/>
+          <line x1="-67" y1="-67" x2="-35" y2="-35"/>
+          <line x1="35" y1="35" x2="67" y2="67"/>
+          <line x1="67" y1="-67" x2="35" y2="-35"/>
+          <line x1="-35" y1="35" x2="-67" y2="67"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="jichi-name">JICHI</div>
+    <div class="jichi-tagline">Observatorio de Seguridad Vial · Santa Cruz</div>
+    <div class="jichi-desc">
+      Un sistema que <em>cruza todos los datos</em>, identifica los puntos más peligrosos y entrega <em>recomendaciones concretas</em> al comité interinstitucional.
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 5 — CÓMO FUNCIONA -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="slide" id="s5">
+  <div class="s5-content">
+    <div class="s5-label">Cómo funciona</div>
+    <h2 class="s5-headline">Datos que se conectan.<br>Decisiones que salvan vidas.</h2>
+
+    <div class="pipe">
+
+      <!-- ── FUENTES ── -->
+      <div class="pipe-col">
+        <div class="pipe-col-head" style="color:#5aabff; border-color:#5aabff">Fuentes de datos</div>
+
+        <!-- Policía -->
+        <div class="pipe-card" style="--c:#5aabff">
+          <div class="pipe-icon">
+            <svg viewBox="0 0 26 26" width="28" height="28" fill="none">
+              <path d="M13 2 15.6 9.5H23.5L17 13.9 19.6 21.4 13 17 6.4 21.4 9 13.9 2.5 9.5H10.4Z"
+                fill="#5aabff" fill-opacity=".25" stroke="#5aabff" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="pipe-info">
+            <strong>Policía</strong>
+            <span>Geolocalización de accidentes</span>
+          </div>
+        </div>
+
+        <!-- Municipio -->
+        <div class="pipe-card" style="--c:#ffb347">
+          <div class="pipe-icon">
+            <svg viewBox="0 0 26 26" width="28" height="28" fill="none">
+              <rect x="2" y="12" width="22" height="12" rx="1" fill="#ffb347" fill-opacity=".2" stroke="#ffb347" stroke-width="1.5"/>
+              <path d="M2 12L13 4l11 8" stroke="#ffb347" stroke-width="1.6" stroke-linejoin="round"/>
+              <path d="M8 24v-6h5v6" stroke="#ffb347" stroke-width="1.5"/>
+              <path d="M16 18h3v6h-3" stroke="#ffb347" stroke-width="1.5"/>
+            </svg>
+          </div>
+          <div class="pipe-info">
+            <strong>Municipio</strong>
+            <span>Estado de infraestructura vial</span>
+          </div>
+        </div>
+
+        <!-- Hospitales -->
+        <div class="pipe-card" style="--c:#ff5a6e">
+          <div class="pipe-icon">
+            <svg viewBox="0 0 26 26" width="28" height="28" fill="none">
+              <circle cx="13" cy="13" r="10" fill="#ff5a6e" fill-opacity=".15" stroke="#ff5a6e" stroke-width="1.5"/>
+              <path d="M13 8v10M8 13h10" stroke="#ff5a6e" stroke-width="2.8" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="pipe-info">
+            <strong>Hospitales</strong>
+            <span>Registro de víctimas y heridos</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CONECTOR IZQUIERDO ── -->
+      <div class="pipe-connector">
+        <svg viewBox="0 0 72 32" width="72" height="32" fill="none">
+          <path d="M4 16 H58" stroke="rgba(100,160,255,.5)" stroke-width="2" stroke-dasharray="6 4">
+            <animate attributeName="stroke-dashoffset" from="10" to="0" dur=".7s" repeatCount="indefinite"/>
+          </path>
+          <path d="M52 9 L62 16 L52 23" stroke="rgba(255,179,71,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- ── JICHI HUB ── -->
+      <div class="pipe-center">
+        <div class="pipe-center-eye">
+          <svg viewBox="0 0 36 24" width="42" height="28" fill="none">
+            <ellipse cx="18" cy="12" rx="16" ry="10" fill="rgba(255,179,71,.12)" stroke="#ffb347" stroke-width="1.5"/>
+            <circle cx="18" cy="12" r="5" fill="#ffb347" fill-opacity=".3"/>
+            <circle cx="18" cy="12" r="2.5" fill="#ffb347"/>
+            <circle cx="19.5" cy="10.5" r="1" fill="#fff" fill-opacity=".8"/>
+          </svg>
+        </div>
+        <div class="pipe-center-name">JICHI</div>
+        <div class="pipe-center-sub">Observatorio</div>
+      </div>
+
+      <!-- ── CONECTOR DERECHO ── -->
+      <div class="pipe-connector">
+        <svg viewBox="0 0 72 32" width="72" height="32" fill="none">
+          <path d="M4 16 H58" stroke="rgba(0,230,118,.5)" stroke-width="2" stroke-dasharray="6 4">
+            <animate attributeName="stroke-dashoffset" from="10" to="0" dur=".7s" repeatCount="indefinite"/>
+          </path>
+          <path d="M52 9 L62 16 L52 23" stroke="rgba(0,230,118,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- ── SALIDAS ── -->
+      <div class="pipe-col">
+        <div class="pipe-col-head" style="color:#00e676; border-color:#00e676">Acciones concretas</div>
+
+        <div class="pipe-output">
+          <div class="pipe-num">01</div>
+          <div class="pipe-info">
+            <strong style="color:#00e676">Puntos críticos</strong>
+            <span>Hotspots identificados</span>
+          </div>
+        </div>
+
+        <div class="pipe-output">
+          <div class="pipe-num">02</div>
+          <div class="pipe-info">
+            <strong style="color:#00e676">Recomendaciones</strong>
+            <span>Con responsable y fecha</span>
+          </div>
+        </div>
+
+        <div class="pipe-output">
+          <div class="pipe-num">03</div>
+          <div class="pipe-info">
+            <strong style="color:#00e676">Seguimiento</strong>
+            <span>Resultados medibles</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pipe -->
+
+    <!-- Píldoras de acción -->
+    <div class="s5-pills">
+      <div class="s5-pill">
+        <svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="#ff5a6e" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="9"/><circle cx="9" cy="12" r=".5" fill="#ff5a6e"/></svg>
+        Intervenir este cruce
+      </div>
+      <div class="s5-pill">
+        <svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="#5aabff" stroke-width="2" stroke-linecap="round"><path d="M9 2L3 5v5c0 4 2.7 7.4 6 8.5C12.3 17.4 15 14 15 10V5z"/></svg>
+        Reforzar patrullaje
+      </div>
+      <div class="s5-pill">
+        <svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="#ffb347" stroke-width="2" stroke-linecap="round"><path d="M3 9h12M3 5h12M3 13h8"/><circle cx="14" cy="13" r="2" stroke="#ffb347"/></svg>
+        Reparar esta calle
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 6 — IMPACTO -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="slide" id="s6">
+  <div class="s6-content">
+    <div class="s6-label">El impacto</div>
+    <div>
+      <span class="s6-plus">+</span><span class="s6-big" id="counter6">100</span>
+    </div>
+    <div class="s6-unit">personas que siguen vivas</div>
+    <p class="s6-sub">
+      En ciudades que hicieron algo parecido, las muertes bajaron entre <strong>15 y 30 por ciento</strong>.<br>
+      Nuestra meta es <strong>25%</strong>. Eso son más de 100 personas que en tres años siguen vivas.
+    </p>
+
+    <div class="s6-stats">
+      <div class="s6-stat">
+        <div class="s6-stat-n">15–30%</div>
+        <div class="s6-stat-l">reducción en ciudades similares</div>
+      </div>
+      <div class="s6-stat">
+        <div class="s6-stat-n">25%</div>
+        <div class="s6-stat-l">nuestra meta en 3 años</div>
+      </div>
+      <div class="s6-stat">
+        <div class="s6-stat-n">100+</div>
+        <div class="s6-stat-l">vidas salvadas</div>
+      </div>
+    </div>
+
+    <div class="s6-bar-wrap">
+      <div class="s6-bar-label">
+        <span>Hoy</span><span>Meta: 25% menos</span>
+      </div>
+      <div class="s6-bar-track">
+        <div class="s6-bar-fill" id="bar6"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 7 — CIERRE CULTURAL -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="slide" id="s7">
+
+  <!-- Background art — nature/forest rays -->
+  <div class="s7-bg-art">
+    <svg width="100%" height="100%" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="forestGlow" cx="50%" cy="100%" r="80%">
+          <stop offset="0%" stop-color="#1a4731" stop-opacity=".6"/>
+          <stop offset="100%" stop-color="#06060f" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="lightBeam" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#56ab2f" stop-opacity=".15"/>
+          <stop offset="100%" stop-color="#56ab2f" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+
+      <!-- Forest floor glow -->
+      <rect width="1200" height="700" fill="url(#forestGlow)"/>
+
+      <!-- Light beams from below -->
+      <g opacity=".4">
+        <polygon points="600,700 540,200 660,200" fill="#a8e063" fill-opacity=".05"/>
+        <polygon points="600,700 480,300 720,300" fill="#56ab2f" fill-opacity=".04"/>
+        <polygon points="600,700 420,400 780,400" fill="#a8e063" fill-opacity=".03"/>
+      </g>
+
+      <!-- Stylized trees/nature at bottom -->
+      <g fill="#1a4731" fill-opacity=".5">
+        <polygon points="0,700 80,500 160,700"/>
+        <polygon points="60,700 150,460 240,700"/>
+        <polygon points="940,700 1030,460 1120,700"/>
+        <polygon points="1040,700 1120,500 1200,700"/>
+        <polygon points="150,700 260,420 370,700"/>
+        <polygon points="830,700 940,420 1050,700"/>
+      </g>
+
+      <!-- Water/Jichi spirit ripples -->
+      <g stroke="#56ab2f" stroke-width="1" fill="none">
+        <ellipse cx="600" cy="700" rx="200" ry="40" stroke-opacity=".2">
+          <animate attributeName="ry" values="0;60;0" dur="4s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-opacity" values=".4;0;.4" dur="4s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="600" cy="700" rx="350" ry="60" stroke-opacity=".12">
+          <animate attributeName="ry" values="0;80;0" dur="4s" begin="1s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-opacity" values=".25;0;.25" dur="4s" begin="1s" repeatCount="indefinite"/>
+        </ellipse>
+        <ellipse cx="600" cy="700" rx="500" ry="80" stroke-opacity=".08">
+          <animate attributeName="ry" values="0;100;0" dur="4s" begin="2s" repeatCount="indefinite"/>
+          <animate attributeName="stroke-opacity" values=".15;0;.15" dur="4s" begin="2s" repeatCount="indefinite"/>
+        </ellipse>
+      </g>
+
+      <!-- Stars/spirit lights -->
+      <g fill="#a8e063">
+        <circle cx="200" cy="150" r="1.5" fill-opacity=".4">
+          <animate attributeName="fill-opacity" values=".2;.8;.2" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="400" cy="80" r="1" fill-opacity=".5">
+          <animate attributeName="fill-opacity" values=".1;.7;.1" dur="4s" begin=".5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="800" cy="120" r="1.5" fill-opacity=".4">
+          <animate attributeName="fill-opacity" values=".3;.9;.3" dur="2.5s" begin="1s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="1000" cy="60" r="1" fill-opacity=".3">
+          <animate attributeName="fill-opacity" values=".2;.6;.2" dur="3.5s" begin="1.5s" repeatCount="indefinite"/>
+        </circle>
+        <circle cx="650" cy="100" r="2" fill-opacity=".5">
+          <animate attributeName="fill-opacity" values=".3;1;.3" dur="2s" repeatCount="indefinite"/>
+        </circle>
+      </g>
+    </svg>
+  </div>
+
+  <div class="s7-content">
+    <p class="s7-prelude">En la cultura chiquitana…</p>
+    <p class="s7-culture">
+      <strong>El Jichi cuida los caminos.</strong>
+      No castiga. Protege.
+    </p>
+    <div class="s7-name">JICHI</div>
+    <div class="s7-name-sub">Guardián de los caminos · Santa Cruz</div>
+    <p class="s7-final">
+      Con datos, con responsables, con fecha.<br>
+      <em>Para que en Santa Cruz no muera nadie más por razones que ya conocemos.</em>
+    </p>
+  </div>
+</section>
+
+</div><!-- /deck -->
+
+<!-- Navigation dots -->
+<div class="nav-dots" id="dots"></div>
+<div class="hint">← → para navegar</div>
+
+<style>
+</style>
+
+<script>
+/* ── PHOTO FALLBACK CHAIN ──────────────────────────────── */
+(function() {
+  const fallbacks = {
+    'img-policia': [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Policia_Boliviana.jpg/480px-Policia_Boliviana.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Bolivia_police.jpg/480px-Bolivia_police.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Polici%C3%ADa_boliviana.jpg/480px-Polici%C3%ADa_boliviana.jpg',
+      'https://picsum.photos/seed/policiaboliviana/480/320'
+    ],
+    'img-municipio': [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Alcald%C3%ADa_de_Santa_Cruz_de_la_Sierra_%28Bolivia%29.jpg/480px-Alcald%C3%ADa_de_Santa_Cruz_de_la_Sierra_%28Bolivia%29.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Santa_Cruz_de_la_Sierra_Centro.jpg/480px-Santa_Cruz_de_la_Sierra_Centro.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Plaza_24_de_Septiembre_Santa_Cruz.jpg/480px-Plaza_24_de_Septiembre_Santa_Cruz.jpg',
+      'https://picsum.photos/seed/santacruzcitybol/480/320'
+    ],
+    'img-hospital': [
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Hospital_Japon%C3%A9s_de_Santa_Cruz_de_la_Sierra.jpg/480px-Hospital_Japon%C3%A9s_de_Santa_Cruz_de_la_Sierra.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Hospital_de_Cl%C3%ADnicas_La_Paz.jpg/480px-Hospital_de_Cl%C3%ADnicas_La_Paz.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/HospitalBolivia.jpg/480px-HospitalBolivia.jpg',
+      'https://picsum.photos/seed/hospitalsantacruz/480/320'
+    ]
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    Object.entries(fallbacks).forEach(([id, urls]) => {
+      const img = document.getElementById(id);
+      if (!img) return;
+      let idx = 0;
+      img.onerror = function() {
+        idx++;
+        if (idx < urls.length) { this.src = urls[idx]; }
+      };
+      img.src = urls[0];
+    });
+  });
+})();
+
+/* ── LUCIDE ICONS ──────────────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  lucide.createIcons({
+    attrs: { 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }
+  });
+});
+
+/* ── SLIDE ENGINE ──────────────────────────────────────── */
+const slides = document.querySelectorAll('.slide');
+const dotsEl = document.getElementById('dots');
+let cur = 0;
+
+// Build dots
+slides.forEach((_, i) => {
+  const d = document.createElement('span');
+  if (i === 0) d.classList.add('active');
+  d.addEventListener('click', () => goTo(i));
+  dotsEl.appendChild(d);
+});
+
+function goTo(n) {
+  if (n < 0 || n >= slides.length) return;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('out');
+  setTimeout(() => slides[cur].classList.remove('out'), 700);
+
+  dotsEl.children[cur].classList.remove('active');
+  cur = n;
+  slides[cur].classList.add('active');
+  dotsEl.children[cur].classList.add('active');
+
+  // Trigger slide-specific animations
+  if (cur === 1) setTimeout(() => { initLeafletMap(); if (scMap) scMap.invalidateSize(); }, 50);
+  if (cur === 5) triggerSlide6();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') goTo(cur + 1);
+  if (e.key === 'ArrowLeft') goTo(cur - 1);
+});
+
+// Touch / swipe
+let touchX = 0;
+document.addEventListener('touchstart', e => touchX = e.touches[0].clientX);
+document.addEventListener('touchend', e => {
+  const dx = touchX - e.changedTouches[0].clientX;
+  if (Math.abs(dx) > 50) goTo(cur + (dx > 0 ? 1 : -1));
+});
+
+/* ── LEAFLET MAP (Slide 2) ─────────────────────────────── */
+let scMap = null;
+
+function initLeafletMap() {
+  if (scMap) return; // ya inicializado
+
+  scMap = L.map('sc-leaflet-map', {
+    center: [-17.7833, -63.1821],
+    zoom: 13,
+    zoomControl: true,
+    scrollWheelZoom: false,
+    dragging: false,
+    doubleClickZoom: false,
+    keyboard: false,
+    attributionControl: true,
+  });
+
+  // Tiles oscuros CartoDB Dark Matter
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+    subdomains: 'abcd',
+    maxZoom: 19,
+  }).addTo(scMap);
+
+  // Hotspots de accidentes en Santa Cruz (coordenadas reales de intersecciones peligrosas)
+  const hotspots = [
+    // 2do anillo
+    { latlng: [-17.7610, -63.2010], type: 'high', label: '2do Anillo y Av. Grigotá' },
+    { latlng: [-17.7740, -63.1640], type: 'high', label: '2do Anillo Este' },
+    { latlng: [-17.8010, -63.1850], type: 'high', label: '2do Anillo Sur' },
+    // 3er anillo
+    { latlng: [-17.7450, -63.2100], type: 'high', label: '3er Anillo Norte' },
+    { latlng: [-17.7680, -63.2250], type: 'high', label: '3er Anillo y Radial 17' },
+    { latlng: [-17.8150, -63.1720], type: 'high', label: '3er Anillo Sur' },
+    { latlng: [-17.7900, -63.2180], type: 'med',  label: '3er Anillo Suroeste' },
+    { latlng: [-17.7500, -63.1550], type: 'high', label: '3er Anillo Este' },
+    // 4to anillo / Av. Banzer
+    { latlng: [-17.7300, -63.2050], type: 'high', label: 'Av. Banzer Norte' },
+    { latlng: [-17.8300, -63.1600], type: 'high', label: '4to Anillo Sur' },
+    { latlng: [-17.7200, -63.1750], type: 'med',  label: '4to Anillo Norte' },
+    { latlng: [-17.8050, -63.2380], type: 'high', label: '4to Anillo Oeste' },
+    // 5to anillo / periurbano
+    { latlng: [-17.7100, -63.2200], type: 'med',  label: 'Periurbano Norte' },
+    { latlng: [-17.8500, -63.1700], type: 'high', label: 'Periurbano Sur' },
+    { latlng: [-17.7600, -63.2550], type: 'med',  label: 'Periurbano Oeste' },
+  ];
+
+  hotspots.forEach((h, i) => {
+    const cls = h.type === 'high' ? 'high' : 'med';
+    const icon = L.divIcon({
+      className: '',
+      html: `<div class="acc-marker ${cls}" style="animation-delay:${(i * 0.18).toFixed(2)}s"></div>`,
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+    });
+    L.marker(h.latlng, { icon, interactive: false }).addTo(scMap);
+  });
+
+  // Pequeño overlay semitransparente de overlay de marca
+  const overlay = L.control({ position: 'bottomleft' });
+  overlay.onAdd = function() {
+    const d = L.DomUtil.create('div');
+    d.style.cssText = 'background:rgba(0,0,0,.55);color:rgba(255,255,255,.75);font-family:Montserrat,sans-serif;font-size:11px;letter-spacing:3px;padding:6px 12px;border-radius:6px;text-transform:uppercase;pointer-events:none;';
+    d.textContent = 'Santa Cruz de la Sierra';
+    return d;
+  };
+  overlay.addTo(scMap);
+}
+
+/* ── SLIDE 1: Moving accident particles ────────────────── */
+(function() {
+  const canvas = document.getElementById('c1');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+
+  function resize() {
+    W = canvas.width  = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize', resize);
+
+  function randomParticle() {
+    // Cars moving on random trajectories
+    const angle = Math.random() * Math.PI * 2;
+    const speed = .4 + Math.random() * .8;
+    return {
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      r:  1 + Math.random() * 1.5,
+      life: 0,
+      maxLife: 120 + Math.random() * 200,
+      red: Math.random() < .35,
+    };
+  }
+
+  for (let i = 0; i < 80; i++) {
+    const p = randomParticle();
+    p.life = Math.random() * p.maxLife;
+    particles.push(p);
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach((p, i) => {
+      p.life++;
+      p.x += p.vx;
+      p.y += p.vy;
+
+      const alpha = Math.sin(Math.PI * p.life / p.maxLife) * .8;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.red
+        ? `rgba(230,57,70,${alpha})`
+        : `rgba(255,255,255,${alpha * .4})`;
+      ctx.fill();
+
+      if (p.life >= p.maxLife || p.x < -10 || p.x > W+10 || p.y < -10 || p.y > H+10) {
+        particles[i] = randomParticle();
+      }
+    });
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+/* ── SLIDE 6: Bar animation ─────────────────────────────── */
+function triggerSlide6() {
+  setTimeout(() => {
+    document.getElementById('bar6').style.width = '75%';
+  }, 300);
+}
+</script>
+
+</body>
+</html>
