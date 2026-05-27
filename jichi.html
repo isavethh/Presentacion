@@ -31,6 +31,7 @@ html, body {
   transition:opacity .7s ease, transform .7s ease;
   transform:translateY(30px);
   overflow:hidden;
+  padding: clamp(20px, 4vh, 56px) clamp(20px, 4vw, 64px);
 }
 .slide.active {
   opacity:1; pointer-events:all;
@@ -72,6 +73,7 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
   font-size:clamp(140px, 24vw, 240px);
   font-weight:900;
   line-height:1;
+  margin-bottom:36px;
   color:#ff4455;
   text-shadow: 0 0 60px rgba(255,68,85,.9), 0 0 120px rgba(255,68,85,.5), 0 0 200px rgba(255,68,85,.2);
   letter-spacing:-4px;
@@ -83,7 +85,7 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
   letter-spacing:8px;
   text-transform:uppercase;
   color:rgba(255,255,255,.85);
-  margin-top:6px;
+  margin-top:0;
 }
 .s1-divider {
   width:120px; height:2px;
@@ -208,7 +210,7 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
   font-weight:900;
   line-height:1.1;
   margin-bottom:20px;
-  font-family:'Playfair Display', serif;
+  /* font-family:'Playfair Display', serif */;
 }
 .s2-headline span { color:#e63946; }
 .s2-body {
@@ -257,7 +259,7 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 .s3-headline {
   font-size:clamp(28px, 4.5vw, 58px);
   font-weight:900; line-height:1.1;
-  font-family:'Playfair Display', serif;
+  /* font-family:'Playfair Display', serif; */
   margin-bottom:12px;
 }
 .s3-sub {
@@ -359,9 +361,10 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 .jichi-name {
   font-size:clamp(72px, 13vw, 155px);
   font-weight:900;
-  font-family:'Playfair Display', serif;
+  /* font-family:'Playfair Display', serif;*/
   letter-spacing:-2px;
-  line-height:1;
+  line-height:1.2;
+  padding-bottom:0.08em;
   background: linear-gradient(135deg, #ffe566 0%, #ffcc33 30%, #ffaa00 65%, #ff7700 100%);
   -webkit-background-clip:text; background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -392,7 +395,13 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 /* SLIDE 5 — CÓMO FUNCIONA */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
-#s5 { background: radial-gradient(ellipse at 50% 50%, #0c1e3a 0%, #0d1a30 50%, #08091f 100%); }
+#s5 {
+  background:
+    radial-gradient(ellipse at 14% 50%, rgba(0,230,118,.10) 0%, transparent 42%),
+    radial-gradient(ellipse at 86% 50%, rgba(0,230,118,.10) 0%, transparent 42%),
+    radial-gradient(ellipse at 50% 50%, rgba(255,179,71,.09) 0%, transparent 22%),
+    radial-gradient(ellipse at 50% 50%, #0f2240 0%, #0d1a30 50%, #08091f 100%);
+}
 
 .s5-content {
   position:relative; z-index:10;
@@ -520,28 +529,28 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 }
 /* Borde de neón por institución */
 .silo-photo-card.police {
-  border:2px solid #5aabff;
-  box-shadow:0 0 0 1px rgba(90,171,255,.1), 0 0 22px rgba(90,171,255,.7), 0 0 55px rgba(90,171,255,.3);
+  border:2px solid #00e676;
+  box-shadow:0 0 0 1px rgba(0,230,118,.1), 0 0 22px rgba(0,230,118,.7), 0 0 55px rgba(0,230,118,.3);
 }
 .silo-photo-card.police::before {
   content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:4;
-  background:linear-gradient(90deg, transparent, #5aabff 30%, #aad4ff 50%, #5aabff 70%, transparent);
+  background:linear-gradient(90deg, transparent, #00e676 30%, #a8ffd4 50%, #00e676 70%, transparent);
 }
 .silo-photo-card.gov {
-  border:2px solid #ffb347;
-  box-shadow:0 0 0 1px rgba(255,179,71,.1), 0 0 22px rgba(255,179,71,.6), 0 0 55px rgba(255,179,71,.25);
+  border:2px solid #ffffff;
+  box-shadow:0 0 0 1px rgba(255,255,255,.1), 0 0 22px rgba(255,255,255,.5), 0 0 55px rgba(255,255,255,.15);
 }
 .silo-photo-card.gov::before {
   content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:4;
-  background:linear-gradient(90deg, transparent, #ffb347 30%, #ffe0a0 50%, #ffb347 70%, transparent);
+  background:linear-gradient(90deg, transparent, #ffffff 30%, #ffffff 50%, #ffffff 70%, transparent);
 }
 .silo-photo-card.hospital {
-  border:2px solid #ff5a6e;
-  box-shadow:0 0 0 1px rgba(255,90,110,.1), 0 0 22px rgba(255,90,110,.7), 0 0 55px rgba(255,90,110,.3);
+  border:2px solid #00e676;
+  box-shadow:0 0 0 1px rgba(0,230,118,.1), 0 0 22px rgba(0,230,118,.7), 0 0 55px rgba(0,230,118,.3);
 }
 .silo-photo-card.hospital::before {
   content:''; position:absolute; top:0; left:0; right:0; height:3px; z-index:4;
-  background:linear-gradient(90deg, transparent, #ff5a6e 30%, #ffaaaa 50%, #ff5a6e 70%, transparent);
+  background:linear-gradient(90deg, transparent, #00e676 30%, #a8ffd4 50%, #00e676 70%, transparent);
 }
 .spc-content {
   position:relative; z-index:2;
@@ -565,171 +574,263 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 }
 
 /* ── SLIDE 5 PIPELINE INFOGRAPHIC ─────────────────────── */
+.s5-bg-art {
+  position:absolute; inset:0;
+  pointer-events:none; overflow:hidden;
+}
 .pipe {
+  position:relative;
+  height:clamp(290px,43vh,390px);
+  width:100%;
+  max-width:1280px;
+  margin:clamp(10px,1.5vw,18px) auto 0;
+}
+.pipe-curves {
+  position:absolute; inset:0;
+  width:100%; height:100%; pointer-events:none;
+  z-index:3;
+}
+/* ── Mini photo source cards (slide 5 — derived from slide 3 silos) ── */
+.pipe-photo {
+  position:absolute;
+  width:clamp(155px,17vw,205px);
+  height:clamp(82px,9.5vw,108px);
+  border-radius:12px;
+  overflow:hidden;
+  z-index:2;
+  border:2px solid var(--c, #00e676);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--c,#00e676) 10%, transparent),
+    0 0 18px color-mix(in srgb, var(--c,#00e676) 55%, transparent),
+    0 8px 24px rgba(0,0,0,.45);
+}
+.pipe-photo::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2.5px; z-index:4;
+  background:linear-gradient(90deg, transparent, var(--c,#00e676) 30%, color-mix(in srgb, var(--c,#00e676) 60%, #fff) 50%, var(--c,#00e676) 70%, transparent);
+}
+.pp-img {
+  position:absolute; inset:0;
+  width:100%; height:100%;
+  object-fit:cover; object-position:center;
+  filter:brightness(.62) saturate(.9) contrast(1.1);
+}
+.pp-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(160deg, rgba(8,9,31,.15) 0%, rgba(8,9,31,.45) 50%, rgba(8,9,31,.88) 100%);
+}
+.pp-icon {
+  position:absolute; top:9px; right:9px; z-index:3;
+  width:24px; height:24px; border-radius:6px;
+  background:rgba(0,0,0,.4); backdrop-filter:blur(4px);
   display:flex; align-items:center; justify-content:center;
-  gap:clamp(6px,1.6vw,22px); width:100%;
 }
-.pipe-col { display:flex; flex-direction:column; gap:clamp(8px,1vw,12px); width:clamp(155px,18vw,220px); }
-.pipe-col-head {
-  font-size:clamp(10px,1vw,12px); font-weight:700;
-  text-transform:uppercase; letter-spacing:2px;
-  padding-bottom:10px; border-bottom:1.5px solid;
-  text-align:center; margin-bottom:2px; opacity:.8;
+.pp-content {
+  position:absolute; left:10px; right:10px; bottom:8px; z-index:3;
 }
-.pipe-card {
-  background:rgba(255,255,255,.07);
-  border:1.5px solid var(--c, rgba(255,255,255,.2));
-  border-radius:14px; padding:clamp(10px,1.3vw,16px);
-  display:flex; align-items:center; gap:12px;
-  box-shadow:0 2px 16px rgba(0,0,0,.25);
+.pp-name {
+  font-size:clamp(12px,1.25vw,14.5px);
+  font-weight:800; color:#fff;
+  letter-spacing:.6px; text-transform:uppercase;
+  line-height:1.1;
 }
-.pipe-icon {
-  width:46px; height:46px; border-radius:12px;
-  background:rgba(255,255,255,.09);
-  border:1px solid rgba(255,255,255,.12);
-  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+.pp-metric {
+  display:inline-block; margin-top:5px;
+  font-size:clamp(9px,.92vw,10.5px); font-style:normal;
+  font-weight:800; letter-spacing:.6px;
+  color:var(--c,#00e676);
+  background:rgba(0,0,0,.35);
+  border:1px solid color-mix(in srgb, var(--c,#00e676) 55%, transparent);
+  padding:1.5px 7px; border-radius:999px;
+  text-shadow:0 0 8px color-mix(in srgb, var(--c,#00e676) 70%, transparent);
 }
+.pipe-src-1 { left:0;   top:6%; }
+.pipe-src-2 { left:3%;  top:36%; }
+.pipe-src-3 { left:0;   top:66%; }
+
+/* Output cards: number + name + metric pill (no description line) */
+.pipe-info { display:flex; flex-direction:column; gap:5px; min-width:0; flex:1; }
 .pipe-info strong {
-  display:block; font-size:clamp(12px,1.3vw,15px);
-  font-weight:800; color:#fff; letter-spacing:.4px;
+  display:block; font-size:clamp(11.5px,1.2vw,14px);
+  font-weight:800; color:#fff; letter-spacing:.2px; line-height:1.15;
+  white-space:nowrap;
 }
-.pipe-info span {
-  display:block; font-size:clamp(10px,1.05vw,12px);
-  color:rgba(255,255,255,.72); font-weight:500;
-  margin-top:3px; line-height:1.4;
+.pipe-info em {
+  display:inline-block;
+  font-size:clamp(9.5px,.95vw,11px); font-style:normal;
+  font-weight:800; letter-spacing:.6px;
+  color:#00e676;
+  background:rgba(0,230,118,.08);
+  border:1px solid rgba(0,230,118,.5);
+  padding:2px 8px; border-radius:999px;
+  text-shadow:0 0 8px rgba(0,230,118,.5);
+  align-self:flex-start;
 }
-.pipe-connector { display:flex; align-items:center; flex-shrink:0; }
 .pipe-center {
-  flex-shrink:0;
-  width:clamp(105px,13vw,160px); height:clamp(105px,13vw,160px);
+  position:absolute;
+  left:50%; top:50%;
+  transform:translate(-63%, -50%);
+  width:clamp(115px,14vw,168px); height:clamp(115px,14vw,168px);
   border-radius:50%;
-  background:radial-gradient(circle, rgba(255,179,71,.18) 0%, rgba(255,179,71,.05) 100%);
-  border:2px solid rgba(255,179,71,.75);
-  box-shadow:0 0 50px rgba(255,179,71,.35), inset 0 0 20px rgba(255,179,71,.06);
+  background:radial-gradient(circle, rgba(255,179,71,.28) 0%, rgba(255,179,71,.1) 55%, transparent 100%);
+  border:2px solid rgba(255,179,71,.9);
+  box-shadow:0 0 80px rgba(255,179,71,.6), 0 0 160px rgba(255,179,71,.2), inset 0 0 30px rgba(255,179,71,.1);
   display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; gap:4px;
+  z-index:2;
+}
+.pipe-center::before {
+  content:''; position:absolute; inset:-22px; border-radius:50%; pointer-events:none;
+  border:1.5px solid rgba(255,179,71,.3); animation:hub-ring 3s ease-out infinite;
+}
+.pipe-center::after {
+  content:''; position:absolute; inset:-46px; border-radius:50%; pointer-events:none;
+  border:1px solid rgba(255,179,71,.15); animation:hub-ring 3s ease-out infinite 1.2s;
+}
+@keyframes hub-ring {
+  0%   { opacity:.7; transform:scale(.88); }
+  100% { opacity:0; transform:scale(1.1); }
 }
 .pipe-center-eye { margin-bottom:2px; }
 .pipe-center-name {
-  font-size:clamp(16px,2.2vw,26px); font-weight:900;
+  font-size:clamp(17px,2.4vw,30px); font-weight:900;
   font-family:'Playfair Display',serif;
   background:linear-gradient(135deg,#ffe566,#ffaa00);
   -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent;
-  line-height:1; filter:drop-shadow(0 0 10px rgba(255,180,0,.5));
+  line-height:1; filter:drop-shadow(0 0 14px rgba(255,180,0,.7));
 }
 .pipe-center-sub {
-  font-size:clamp(8px,.9vw,10px); color:rgba(255,179,71,.85);
+  font-size:clamp(7px,.85vw,9px); color:rgba(255,179,71,.9);
   font-weight:700; text-transform:uppercase; letter-spacing:2px;
 }
 .pipe-output {
-  background:rgba(0,230,118,.09);
-  border:1.5px solid rgba(0,230,118,.45);
-  border-radius:14px; padding:clamp(10px,1.3vw,16px);
-  display:flex; align-items:center; gap:12px;
-  box-shadow:0 2px 14px rgba(0,0,0,.2);
+  position:absolute;
+  width:clamp(175px,19vw,235px);
+  min-height:clamp(72px,8.5vw,98px);
+  background:linear-gradient(135deg, rgba(0,230,118,.14) 0%, rgba(0,230,118,.06) 100%);
+  border:1.5px solid rgba(0,230,118,.6);
+  border-radius:14px; padding:clamp(10px,1.25vw,14px) clamp(12px,1.4vw,16px);
+  display:flex; align-items:center; gap:clamp(8px,1vw,12px);
+  box-shadow:0 4px 20px rgba(0,0,0,.3), 0 0 24px rgba(0,230,118,.15);
+  overflow:hidden; z-index:2;
 }
+.pipe-output::after {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  background:rgba(0,230,118,.85); border-radius:3px 0 0 3px;
+  box-shadow:0 0 10px rgba(0,230,118,.6);
+}
+.pipe-out-1 { right:0;   top:10%; }
+.pipe-out-2 { right:3%;  top:40%; }
+.pipe-out-3 { right:0;   top:70%; }
 .pipe-num {
-  font-size:clamp(20px,2.6vw,32px); font-weight:900;
+  font-size:clamp(20px,2.5vw,30px); font-weight:900;
   font-family:'Playfair Display',serif;
-  color:#00e676; line-height:1; flex-shrink:0; width:38px; text-align:center;
-  text-shadow:0 0 12px rgba(0,230,118,.5);
+  color:#00e676; line-height:1; flex-shrink:0; width:34px; text-align:center;
+  text-shadow:0 0 20px rgba(0,230,118,.7);
 }
-.s5-pills {
-  display:flex; justify-content:center; gap:clamp(8px,1.5vw,16px);
-  margin-top:clamp(18px,2.5vw,30px); flex-wrap:wrap;
-}
-.s5-pill {
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.18);
-  border-radius:999px;
-  padding:clamp(8px,1vw,12px) clamp(16px,2vw,24px);
-  font-size:clamp(12px,1.3vw,15px); font-weight:700;
-  color:#fff; display:flex; align-items:center; gap:9px; letter-spacing:.3px;
-}
-.s5-pill svg { flex-shrink:0; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 /* SLIDE 6 — IMPACTO */
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 #s6 { background: radial-gradient(ellipse at 50% 50%, #062010 0%, #082816 45%, #08091f 100%); }
 
-.s6-content {
+.s6-stage {
   position:relative; z-index:10;
-  text-align:center;
+  width:min(1040px, 82vw);
+  height:min(540px, 64vh);
+  margin:0 auto;
   animation: fadeUp .8s .2s both;
 }
+.s6-cloud {
+  position:absolute; inset:0;
+  z-index:1;
+}
+.s6-dot {
+  position:absolute;
+  width:clamp(8px, 1.05vw, 14px);
+  aspect-ratio:1; border-radius:50%;
+  background:#00e676;
+  box-shadow:0 0 8px rgba(0,230,118,.9), 0 0 18px rgba(0,230,118,.35);
+  transform:translate(-50%,-50%) scale(0);
+  opacity:0;
+  animation:dot-pop .35s cubic-bezier(.2,.8,.3,1) forwards;
+}
+@keyframes dot-pop {
+  to { opacity:1; transform:translate(-50%,-50%) scale(1); }
+}
+.s6-number {
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%, -50%);
+  z-index:3;
+  display:flex; align-items:flex-start;
+  pointer-events:none;
+  font-family:'Playfair Display', serif;
+  font-weight:900;
+  line-height:.9;
+  letter-spacing:-4px;
+  animation: numFade 1.2s 1.6s both;
+}
+@keyframes numFade {
+  from { opacity:0; transform:translate(-50%, -50%) scale(.96); }
+  to   { opacity:1; transform:translate(-50%, -50%) scale(1); }
+}
+.s6-plus {
+  font-size:clamp(48px, 8vw, 110px);
+  color:rgba(0,230,118,.95);
+  text-shadow:0 0 30px rgba(0,230,118,.9), 0 0 70px rgba(0,230,118,.4);
+  margin-top:clamp(18px, 3vw, 50px);
+  margin-right:clamp(4px, .6vw, 10px);
+}
+.s6-big {
+  font-size:clamp(160px, 24vw, 320px);
+  color:#00e676;
+  text-shadow:
+    0 0 50px rgba(0,230,118,1),
+    0 0 120px rgba(0,230,118,.55),
+    0 0 260px rgba(0,230,118,.22);
+}
 .s6-label {
+  position:absolute;
+  top:clamp(40px, 7vh, 80px);
+  left:50%;
+  transform:translateX(-50%);
+  z-index:4;
   font-size:clamp(11px, 1.2vw, 14px);
   font-weight:700; letter-spacing:5px;
   text-transform:uppercase; color:#00c853;
-  margin-bottom:20px;
+  text-shadow:0 0 18px rgba(0,230,118,.5);
+  animation: fadeUp .8s .1s both;
 }
-.s6-big {
-  font-size:clamp(90px, 17vw, 200px);
-  font-weight:900; line-height:1;
-  font-family:'Playfair Display', serif;
-  color:#00e676;
-  text-shadow: 0 0 60px rgba(0,230,118,1), 0 0 120px rgba(0,230,118,.5), 0 0 220px rgba(0,230,118,.2);
-  filter: drop-shadow(0 0 40px rgba(0,230,118,.6));
-}
-.s6-plus {
-  font-size:clamp(40px, 7vw, 90px);
-  color:rgba(0,230,118,.9);
-}
-.s6-unit {
-  font-size:clamp(22px, 3.5vw, 44px);
+.s6-caption {
+  position:absolute;
+  bottom:clamp(90px, 13vh, 150px);
+  left:50%;
+  transform:translateX(-50%);
+  z-index:4;
+  font-size:clamp(17px, 2.1vw, 28px);
   font-weight:700;
+  letter-spacing:clamp(2px, .35vw, 5px);
+  text-transform:uppercase;
   color:#fff;
-  margin-top:8px;
+  white-space:nowrap;
+  text-shadow:0 0 18px rgba(0,230,118,.4);
+  animation: fadeUp 1s 2.4s both;
 }
-.s6-sub {
-  margin-top:14px;
-  font-size:clamp(15px, 1.7vw, 21px);
-  color:rgba(255,255,255,.8);
-  font-weight:500; line-height:1.7;
-  max-width:620px; margin-left:auto; margin-right:auto;
+.s6-meta {
+  position:absolute;
+  bottom:clamp(50px, 7.5vh, 88px);
+  left:50%;
+  transform:translateX(-50%);
+  z-index:4;
+  font-size:clamp(12px, 1.25vw, 15px);
+  font-weight:500;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,.55);
+  white-space:nowrap;
+  animation: fadeUp 1s 2.8s both;
 }
-.s6-sub strong { color:#00e676; font-weight:800; }
-
-.s6-stats {
-  display:flex; justify-content:center;
-  gap:clamp(20px, 4vw, 60px);
-  margin-top:40px;
-}
-.s6-stat { text-align:center; }
-.s6-stat-n {
-  font-size:clamp(30px, 4.5vw, 58px);
-  font-weight:900; color:#ffb347;
-  font-family:'Playfair Display', serif;
-  text-shadow:0 0 30px rgba(255,179,71,.5);
-}
-.s6-stat-l {
-  font-size:clamp(12px, 1.3vw, 15px);
-  color:rgba(255,255,255,.7);
-  font-weight:600; margin-top:5px;
-  text-transform:uppercase; letter-spacing:2px;
-}
-.s6-bar-wrap {
-  margin-top:32px;
-  width:min(500px, 80vw);
-  margin-left:auto; margin-right:auto;
-}
-.s6-bar-label {
-  display:flex; justify-content:space-between;
-  font-size:clamp(11px, 1.2vw, 13px);
-  color:rgba(255,255,255,.78);
-  margin-bottom:8px;
-}
-.s6-bar-track {
-  height:10px; border-radius:99px;
-  background:rgba(255,255,255,.08);
-  overflow:hidden;
-}
-.s6-bar-fill {
-  height:100%; border-radius:99px;
-  background:linear-gradient(90deg, #e63946, #f5a623 50%, #00c853);
-  width:0%;
-  transition: width 1.5s cubic-bezier(.2,.8,.3,1);
-}
+.s6-meta strong { color:#00e676; font-weight:800; }
+.s6-meta .sep { color:rgba(255,255,255,.25); margin:0 .7em; }
 
 /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
 /* SLIDE 7 — CIERRE / JICHI GUARDIAN */
@@ -776,7 +877,8 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
   font-size:clamp(90px, 17vw, 200px);
   font-weight:900;
   font-family:'Playfair Display', serif;
-  line-height:1;
+  line-height:1.2;
+  padding-bottom:0.08em;
   background: linear-gradient(160deg, #d4f56a 0%, #7ed321 35%, #3aaa35 70%, #1a6b1a 100%);
   -webkit-background-clip:text; background-clip:text;
   -webkit-text-fill-color:transparent;
@@ -892,18 +994,18 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 <section class="slide" id="s3">
   <div class="s3-content">
     <div class="s3-label">El problema</div>
-    <h2 class="s3-headline">Los datos están.<br>Nadie los cruza.</h2>
+    <h2 class="s3-headline">LOS DATOS ESTÁN<br>NADIE LOS CRUZA</h2>
     <p class="s3-sub">La Policía registra accidentes. El Municipio conoce las calles en mal estado.<br>Los hospitales cuentan cada herido. Pero cada institución trabaja sola.</p>
 
     <div class="silos">
       <!-- Policía Boliviana -->
       <div class="silo-photo-card police">
-        <img class="spc-photo" id="img-policia"
-             src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Policia_Boliviana.jpg/480px-Policia_Boliviana.jpg"
-             alt="Policía Boliviana">
+        <img class="spc-photo" data-photo="policia"
+             src="https://pbs.twimg.com/media/DnoAvq5WwAEn_uX.jpg"
+             alt="Policía Boliviana en acción">
         <div class="spc-overlay"></div>
         <div class="spc-icon">
-          <i data-lucide="shield-check" style="width:28px;height:28px;stroke:#5aabff;stroke-width:2;"></i>
+          <i data-lucide="shield-check" style="width:28px;height:28px;stroke:#00e676;stroke-width:2;"></i>
         </div>
         <div class="spc-content">
           <div class="spc-name">Policía</div>
@@ -912,19 +1014,17 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
       </div>
 
       <div class="silo-gap">
-        <div class="gap-line"></div>
-        <div class="gap-x">✕</div>
-        <div class="gap-line"></div>
+
       </div>
 
       <!-- Municipio de Santa Cruz -->
       <div class="silo-photo-card gov">
-        <img class="spc-photo" id="img-municipio"
-             src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Alcald%C3%ADa_de_Santa_Cruz_de_la_Sierra_%28Bolivia%29.jpg/480px-Alcald%C3%ADa_de_Santa_Cruz_de_la_Sierra_%28Bolivia%29.jpg"
+        <img class="spc-photo" data-photo="municipio"
+             src="https://www.gmsantacruz.gob.bo/images/portada-direccion-general-municipal_ok.png"
              alt="Alcaldía Santa Cruz de la Sierra">
         <div class="spc-overlay"></div>
         <div class="spc-icon">
-          <i data-lucide="landmark" style="width:28px;height:28px;stroke:#ffb347;stroke-width:2;"></i>
+          <i data-lucide="landmark" style="width:28px;height:28px;stroke:#ffffff;stroke-width:2;"></i>
         </div>
         <div class="spc-content">
           <div class="spc-name">Municipio</div>
@@ -933,19 +1033,17 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
       </div>
 
       <div class="silo-gap">
-        <div class="gap-line"></div>
-        <div class="gap-x">✕</div>
-        <div class="gap-line"></div>
+
       </div>
 
       <!-- Hospital Bolivia -->
       <div class="silo-photo-card hospital">
-        <img class="spc-photo" id="img-hospital"
-             src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Hospital_Japon%C3%A9s_de_Santa_Cruz_de_la_Sierra.jpg/480px-Hospital_Japon%C3%A9s_de_Santa_Cruz_de_la_Sierra.jpg"
+        <img class="spc-photo" data-photo="hospital"
+             src="https://pxcdn.reduno.com.bo/reduno/092025/1757346537818.jpg"
              alt="Hospital Japonés Santa Cruz">
         <div class="spc-overlay"></div>
         <div class="spc-icon">
-          <i data-lucide="cross" style="width:28px;height:28px;stroke:#ff5a6e;stroke-width:2;"></i>
+          <i data-lucide="cross" style="width:28px;height:28px;stroke:#00e676;stroke-width:2;"></i>
         </div>
         <div class="spc-content">
           <div class="spc-name">Hospitales</div>
@@ -1026,69 +1124,165 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 <!-- SLIDE 5 — CÓMO FUNCIONA -->
 <!-- ══════════════════════════════════════════════════════ -->
 <section class="slide" id="s5">
+  <div class="s5-bg-art">
+    <svg width="100%" height="100%" viewBox="0 0 1200 700" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="s5hub" cx="50%" cy="55%" r="35%">
+          <stop offset="0%" stop-color="#ffb347" stop-opacity=".1"/>
+          <stop offset="100%" stop-color="#ffb347" stop-opacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="1200" height="700" fill="url(#s5hub)"/>
+      <!-- Nodos izquierda (azul) -->
+      <circle cx="75" cy="210" r="3" fill="#00e676" fill-opacity=".3"><animate attributeName="fill-opacity" values=".2;.55;.2" dur="3s" repeatCount="indefinite"/></circle>
+      <circle cx="130" cy="390" r="2" fill="#00e676" fill-opacity=".25"><animate attributeName="fill-opacity" values=".15;.45;.15" dur="4s" begin=".5s" repeatCount="indefinite"/></circle>
+      <circle cx="55" cy="510" r="2.5" fill="#00e676" fill-opacity=".2"><animate attributeName="fill-opacity" values=".1;.4;.1" dur="3.5s" begin="1s" repeatCount="indefinite"/></circle>
+      <line x1="75" y1="210" x2="130" y2="390" stroke="#00e676" stroke-opacity=".08" stroke-width="1"/>
+      <line x1="130" y1="390" x2="55" y2="510" stroke="#00e676" stroke-opacity=".08" stroke-width="1"/>
+      <!-- Nodos derecha (verde) -->
+      <circle cx="1125" cy="210" r="3" fill="#00e676" fill-opacity=".3"><animate attributeName="fill-opacity" values=".2;.55;.2" dur="3.2s" repeatCount="indefinite"/></circle>
+      <circle cx="1070" cy="390" r="2" fill="#00e676" fill-opacity=".25"><animate attributeName="fill-opacity" values=".15;.45;.15" dur="4.2s" begin=".7s" repeatCount="indefinite"/></circle>
+      <circle cx="1145" cy="510" r="2.5" fill="#00e676" fill-opacity=".2"><animate attributeName="fill-opacity" values=".1;.4;.1" dur="3.8s" begin="1.2s" repeatCount="indefinite"/></circle>
+      <line x1="1125" y1="210" x2="1070" y2="390" stroke="#00e676" stroke-opacity=".08" stroke-width="1"/>
+      <line x1="1070" y1="390" x2="1145" y2="510" stroke="#00e676" stroke-opacity=".08" stroke-width="1"/>
+      <!-- Líneas horizontales de flujo -->
+      <line x1="0" y1="215" x2="360" y2="215" stroke="#00e676" stroke-opacity=".05" stroke-width="1" stroke-dasharray="5 13"/>
+      <line x1="0" y1="385" x2="360" y2="385" stroke="#00e676" stroke-opacity=".05" stroke-width="1" stroke-dasharray="5 13"/>
+      <line x1="0" y1="555" x2="360" y2="555" stroke="#00e676" stroke-opacity=".05" stroke-width="1" stroke-dasharray="5 13"/>
+      <line x1="840" y1="215" x2="1200" y2="215" stroke="#00e676" stroke-opacity=".05" stroke-width="1" stroke-dasharray="5 13"/>
+      <line x1="840" y1="385" x2="1200" y2="385" stroke="#00e676" stroke-opacity=".05" stroke-width="1" stroke-dasharray="5 13"/>
+      <line x1="840" y1="555" x2="1200" y2="555" stroke="#00e676" stroke-opacity=".05" stroke-width="1" stroke-dasharray="5 13"/>
+    </svg>
+  </div>
   <div class="s5-content">
     <div class="s5-label">Cómo funciona</div>
     <h2 class="s5-headline">Datos que se conectan.<br>Decisiones que salvan vidas.</h2>
 
     <div class="pipe">
 
-      <!-- ── FUENTES ── -->
-      <div class="pipe-col">
-        <div class="pipe-col-head" style="color:#5aabff; border-color:#5aabff">Fuentes de datos</div>
+      <!-- ── BEZIER CURVES ── -->
+      <svg class="pipe-curves" viewBox="0 0 1000 400" preserveAspectRatio="none" fill="none">
+        <!-- Source → JICHI (institución: verde / blanco / verde) -->
+        <path id="pcurve-s1" d="M 160 80  C 280 80  360 180 411 200" stroke="#00e676" stroke-width="1.8" stroke-dasharray="8 5" opacity=".75">
+          <animate attributeName="stroke-dashoffset" from="26" to="0" dur="1.1s" repeatCount="indefinite"/>
+        </path>
+        <path id="pcurve-s2" d="M 190 200 C 280 200 360 200 411 200" stroke="#ffffff" stroke-width="1.8" stroke-dasharray="8 5" opacity=".7">
+          <animate attributeName="stroke-dashoffset" from="26" to="0" dur=".9s" repeatCount="indefinite"/>
+        </path>
+        <path id="pcurve-s3" d="M 160 320 C 280 320 360 220 411 200" stroke="#00e676" stroke-width="1.8" stroke-dasharray="8 5" opacity=".75">
+          <animate attributeName="stroke-dashoffset" from="26" to="0" dur="1.3s" repeatCount="indefinite"/>
+        </path>
+        <!-- JICHI → Output (verde) — endpoints en el borde izquierdo de cada card -->
+        <path id="pcurve-o1" d="M 552 200 C 640 200 720 80  816 80 " stroke="#00e676" stroke-width="1.8" stroke-dasharray="8 5" opacity=".75">
+          <animate attributeName="stroke-dashoffset" from="0" to="26" dur="1.1s" repeatCount="indefinite"/>
+        </path>
+        <path id="pcurve-o2" d="M 552 200 C 640 200 720 200 786 200" stroke="#00e676" stroke-width="1.8" stroke-dasharray="8 5" opacity=".75">
+          <animate attributeName="stroke-dashoffset" from="0" to="26" dur=".9s" repeatCount="indefinite"/>
+        </path>
+        <path id="pcurve-o3" d="M 552 200 C 640 200 720 320 816 320" stroke="#00e676" stroke-width="1.8" stroke-dasharray="8 5" opacity=".75">
+          <animate attributeName="stroke-dashoffset" from="0" to="26" dur="1.3s" repeatCount="indefinite"/>
+        </path>
 
-        <!-- Policía -->
-        <div class="pipe-card" style="--c:#5aabff">
-          <div class="pipe-icon">
-            <svg viewBox="0 0 26 26" width="28" height="28" fill="none">
-              <path d="M13 2 15.6 9.5H23.5L17 13.9 19.6 21.4 13 17 6.4 21.4 9 13.9 2.5 9.5H10.4Z"
-                fill="#5aabff" fill-opacity=".25" stroke="#5aabff" stroke-width="1.6" stroke-linejoin="round"/>
-            </svg>
-          </div>
-          <div class="pipe-info">
-            <strong>Policía</strong>
-            <span>Geolocalización de accidentes</span>
-          </div>
+        <!-- ── Traveling particles ── -->
+        <!-- S1 green -->
+        <circle r="7" fill="#00e676" opacity=".22">
+          <animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath href="#pcurve-s1"/></animateMotion>
+        </circle>
+        <circle r="2.6" fill="#d0ffe2" opacity="1">
+          <animateMotion dur="2.6s" repeatCount="indefinite" begin="0s"><mpath href="#pcurve-s1"/></animateMotion>
+        </circle>
+        <circle r="2.2" fill="#00e676" opacity=".9">
+          <animateMotion dur="2.6s" repeatCount="indefinite" begin="1.3s"><mpath href="#pcurve-s1"/></animateMotion>
+        </circle>
+        <!-- S2 white -->
+        <circle r="7" fill="#ffffff" opacity=".18">
+          <animateMotion dur="2.1s" repeatCount="indefinite" begin=".4s"><mpath href="#pcurve-s2"/></animateMotion>
+        </circle>
+        <circle r="2.6" fill="#ffffff" opacity="1">
+          <animateMotion dur="2.1s" repeatCount="indefinite" begin=".4s"><mpath href="#pcurve-s2"/></animateMotion>
+        </circle>
+        <circle r="2.2" fill="#ffffff" opacity=".85">
+          <animateMotion dur="2.1s" repeatCount="indefinite" begin="1.5s"><mpath href="#pcurve-s2"/></animateMotion>
+        </circle>
+        <!-- S3 green -->
+        <circle r="7" fill="#00e676" opacity=".22">
+          <animateMotion dur="3s" repeatCount="indefinite" begin=".8s"><mpath href="#pcurve-s3"/></animateMotion>
+        </circle>
+        <circle r="2.6" fill="#d0ffe2" opacity="1">
+          <animateMotion dur="3s" repeatCount="indefinite" begin=".8s"><mpath href="#pcurve-s3"/></animateMotion>
+        </circle>
+        <circle r="2.2" fill="#00e676" opacity=".9">
+          <animateMotion dur="3s" repeatCount="indefinite" begin="2.3s"><mpath href="#pcurve-s3"/></animateMotion>
+        </circle>
+        <!-- O1 green (top) -->
+        <circle r="7" fill="#00e676" opacity=".22">
+          <animateMotion dur="2.4s" repeatCount="indefinite" begin=".2s"><mpath href="#pcurve-o1"/></animateMotion>
+        </circle>
+        <circle r="2.6" fill="#d0ffe2" opacity="1">
+          <animateMotion dur="2.4s" repeatCount="indefinite" begin=".2s"><mpath href="#pcurve-o1"/></animateMotion>
+        </circle>
+        <!-- O2 green (mid) -->
+        <circle r="7" fill="#00e676" opacity=".22">
+          <animateMotion dur="2s" repeatCount="indefinite" begin=".7s"><mpath href="#pcurve-o2"/></animateMotion>
+        </circle>
+        <circle r="2.6" fill="#d0ffe2" opacity="1">
+          <animateMotion dur="2s" repeatCount="indefinite" begin=".7s"><mpath href="#pcurve-o2"/></animateMotion>
+        </circle>
+        <!-- O3 green (bottom) -->
+        <circle r="7" fill="#00e676" opacity=".22">
+          <animateMotion dur="2.8s" repeatCount="indefinite" begin="1.1s"><mpath href="#pcurve-o3"/></animateMotion>
+        </circle>
+        <circle r="2.6" fill="#d0ffe2" opacity="1">
+          <animateMotion dur="2.8s" repeatCount="indefinite" begin="1.1s"><mpath href="#pcurve-o3"/></animateMotion>
+        </circle>
+
+        <!-- Glowing endpoint dots — anclados al borde de cada card -->
+        <circle cx="160" cy="80"  r="4" fill="#00e676" opacity=".85"/>
+        <circle cx="190" cy="200" r="4" fill="#ffffff" opacity=".85"/>
+        <circle cx="160" cy="320" r="4" fill="#00e676" opacity=".85"/>
+        <circle cx="816" cy="80"  r="4" fill="#00e676" opacity=".85"/>
+        <circle cx="786" cy="200" r="4" fill="#00e676" opacity=".85"/>
+        <circle cx="816" cy="320" r="4" fill="#00e676" opacity=".85"/>
+      </svg>
+
+      <!-- ── FUENTES (mini photo cards) ── -->
+      <div class="pipe-photo pipe-src-1" style="--c:#00e676">
+        <img class="pp-img" data-photo="policia"
+             src="https://pbs.twimg.com/media/DnoAvq5WwAEn_uX.jpg" alt="Policía">
+        <div class="pp-overlay"></div>
+        <div class="pp-icon">
+          <i data-lucide="shield-check" style="width:14px;height:14px;stroke:#00e676;stroke-width:2.4;"></i>
         </div>
-
-        <!-- Municipio -->
-        <div class="pipe-card" style="--c:#ffb347">
-          <div class="pipe-icon">
-            <svg viewBox="0 0 26 26" width="28" height="28" fill="none">
-              <rect x="2" y="12" width="22" height="12" rx="1" fill="#ffb347" fill-opacity=".2" stroke="#ffb347" stroke-width="1.5"/>
-              <path d="M2 12L13 4l11 8" stroke="#ffb347" stroke-width="1.6" stroke-linejoin="round"/>
-              <path d="M8 24v-6h5v6" stroke="#ffb347" stroke-width="1.5"/>
-              <path d="M16 18h3v6h-3" stroke="#ffb347" stroke-width="1.5"/>
-            </svg>
-          </div>
-          <div class="pipe-info">
-            <strong>Municipio</strong>
-            <span>Estado de infraestructura vial</span>
-          </div>
-        </div>
-
-        <!-- Hospitales -->
-        <div class="pipe-card" style="--c:#ff5a6e">
-          <div class="pipe-icon">
-            <svg viewBox="0 0 26 26" width="28" height="28" fill="none">
-              <circle cx="13" cy="13" r="10" fill="#ff5a6e" fill-opacity=".15" stroke="#ff5a6e" stroke-width="1.5"/>
-              <path d="M13 8v10M8 13h10" stroke="#ff5a6e" stroke-width="2.8" stroke-linecap="round"/>
-            </svg>
-          </div>
-          <div class="pipe-info">
-            <strong>Hospitales</strong>
-            <span>Registro de víctimas y heridos</span>
-          </div>
+        <div class="pp-content">
+          <div class="pp-name">Policía</div>
+          <div class="pp-metric">~340 / mes</div>
         </div>
       </div>
 
-      <!-- ── CONECTOR IZQUIERDO ── -->
-      <div class="pipe-connector">
-        <svg viewBox="0 0 72 32" width="72" height="32" fill="none">
-          <path d="M4 16 H58" stroke="rgba(100,160,255,.5)" stroke-width="2" stroke-dasharray="6 4">
-            <animate attributeName="stroke-dashoffset" from="10" to="0" dur=".7s" repeatCount="indefinite"/>
-          </path>
-          <path d="M52 9 L62 16 L52 23" stroke="rgba(255,179,71,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <div class="pipe-photo pipe-src-2" style="--c:#ffffff">
+        <img class="pp-img" data-photo="municipio"
+             src="https://www.gmsantacruz.gob.bo/images/portada-direccion-general-municipal_ok.png" alt="Municipio">
+        <div class="pp-overlay"></div>
+        <div class="pp-icon">
+          <i data-lucide="landmark" style="width:14px;height:14px;stroke:#ffffff;stroke-width:2.4;"></i>
+        </div>
+        <div class="pp-content">
+          <div class="pp-name">Municipio</div>
+          <div class="pp-metric">~80 cruces</div>
+        </div>
+      </div>
+
+      <div class="pipe-photo pipe-src-3" style="--c:#00e676">
+        <img class="pp-img" data-photo="hospital"
+             src="https://pxcdn.reduno.com.bo/reduno/092025/1757346537818.jpg" alt="Hospitales">
+        <div class="pp-overlay"></div>
+        <div class="pp-icon">
+          <i data-lucide="cross" style="width:14px;height:14px;stroke:#00e676;stroke-width:2.4;"></i>
+        </div>
+        <div class="pp-content">
+          <div class="pp-name">Hospitales</div>
+          <div class="pp-metric">~520 / mes</div>
+        </div>
       </div>
 
       <!-- ── JICHI HUB ── -->
@@ -1105,62 +1299,32 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
         <div class="pipe-center-sub">Observatorio</div>
       </div>
 
-      <!-- ── CONECTOR DERECHO ── -->
-      <div class="pipe-connector">
-        <svg viewBox="0 0 72 32" width="72" height="32" fill="none">
-          <path d="M4 16 H58" stroke="rgba(0,230,118,.5)" stroke-width="2" stroke-dasharray="6 4">
-            <animate attributeName="stroke-dashoffset" from="10" to="0" dur=".7s" repeatCount="indefinite"/>
-          </path>
-          <path d="M52 9 L62 16 L52 23" stroke="rgba(0,230,118,.9)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
+      <!-- ── SALIDAS (condensadas: número + nombre + métrica) ── -->
+      <div class="pipe-output pipe-out-1">
+        <div class="pipe-num">01</div>
+        <div class="pipe-info">
+          <strong style="color:#00e676">Puntos críticos</strong>
+          <em>Top 10</em>
+        </div>
       </div>
 
-      <!-- ── SALIDAS ── -->
-      <div class="pipe-col">
-        <div class="pipe-col-head" style="color:#00e676; border-color:#00e676">Acciones concretas</div>
-
-        <div class="pipe-output">
-          <div class="pipe-num">01</div>
-          <div class="pipe-info">
-            <strong style="color:#00e676">Puntos críticos</strong>
-            <span>Hotspots identificados</span>
-          </div>
+      <div class="pipe-output pipe-out-2">
+        <div class="pipe-num">02</div>
+        <div class="pipe-info">
+          <strong style="color:#00e676">Recomendaciones</strong>
+          <em>Trimestral</em>
         </div>
+      </div>
 
-        <div class="pipe-output">
-          <div class="pipe-num">02</div>
-          <div class="pipe-info">
-            <strong style="color:#00e676">Recomendaciones</strong>
-            <span>Con responsable y fecha</span>
-          </div>
-        </div>
-
-        <div class="pipe-output">
-          <div class="pipe-num">03</div>
-          <div class="pipe-info">
-            <strong style="color:#00e676">Seguimiento</strong>
-            <span>Resultados medibles</span>
-          </div>
+      <div class="pipe-output pipe-out-3">
+        <div class="pipe-num">03</div>
+        <div class="pipe-info">
+          <strong style="color:#00e676">Seguimiento</strong>
+          <em>Meta −25%</em>
         </div>
       </div>
 
     </div><!-- /pipe -->
-
-    <!-- Píldoras de acción -->
-    <div class="s5-pills">
-      <div class="s5-pill">
-        <svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="#ff5a6e" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="7"/><line x1="9" y1="6" x2="9" y2="9"/><circle cx="9" cy="12" r=".5" fill="#ff5a6e"/></svg>
-        Intervenir este cruce
-      </div>
-      <div class="s5-pill">
-        <svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="#5aabff" stroke-width="2" stroke-linecap="round"><path d="M9 2L3 5v5c0 4 2.7 7.4 6 8.5C12.3 17.4 15 14 15 10V5z"/></svg>
-        Reforzar patrullaje
-      </div>
-      <div class="s5-pill">
-        <svg viewBox="0 0 18 18" width="16" height="16" fill="none" stroke="#ffb347" stroke-width="2" stroke-linecap="round"><path d="M3 9h12M3 5h12M3 13h8"/><circle cx="14" cy="13" r="2" stroke="#ffb347"/></svg>
-        Reparar esta calle
-      </div>
-    </div>
 
   </div>
 </section>
@@ -1169,40 +1333,20 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 <!-- SLIDE 6 — IMPACTO -->
 <!-- ══════════════════════════════════════════════════════ -->
 <section class="slide" id="s6">
-  <div class="s6-content">
-    <div class="s6-label">El impacto</div>
-    <div>
-      <span class="s6-plus">+</span><span class="s6-big" id="counter6">100</span>
+  <div class="s6-label">El impacto</div>
+  <div class="s6-stage">
+    <div class="s6-cloud" id="s6grid"></div>
+    <div class="s6-number">
+      <span class="s6-plus">+</span><span class="s6-big">100</span>
     </div>
-    <div class="s6-unit">personas que siguen vivas</div>
-    <p class="s6-sub">
-      En ciudades que hicieron algo parecido, las muertes bajaron entre <strong>15 y 30 por ciento</strong>.<br>
-      Nuestra meta es <strong>25%</strong>. Eso son más de 100 personas que en tres años siguen vivas.
-    </p>
-
-    <div class="s6-stats">
-      <div class="s6-stat">
-        <div class="s6-stat-n">15–30%</div>
-        <div class="s6-stat-l">reducción en ciudades similares</div>
-      </div>
-      <div class="s6-stat">
-        <div class="s6-stat-n">25%</div>
-        <div class="s6-stat-l">nuestra meta en 3 años</div>
-      </div>
-      <div class="s6-stat">
-        <div class="s6-stat-n">100+</div>
-        <div class="s6-stat-l">vidas salvadas</div>
-      </div>
-    </div>
-
-    <div class="s6-bar-wrap">
-      <div class="s6-bar-label">
-        <span>Hoy</span><span>Meta: 25% menos</span>
-      </div>
-      <div class="s6-bar-track">
-        <div class="s6-bar-fill" id="bar6"></div>
-      </div>
-    </div>
+  </div>
+  <div class="s6-caption">personas que siguen vivas</div>
+  <div class="s6-meta">
+    Meta: <strong>−25%</strong> en 3 años
+    <span class="sep">·</span>
+    Ciudades similares: <strong>15–30%</strong>
+    <span class="sep">·</span>
+    Santa Cruz
   </div>
 </section>
 
@@ -1309,20 +1453,23 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 <script>
 /* ── PHOTO FALLBACK CHAIN ──────────────────────────────── */
 (function() {
-  const fallbacks = {
-    'img-policia': [
+  const photoSets = {
+    policia: [
+      'https://pbs.twimg.com/media/DnoAvq5WwAEn_uX.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Policia_Boliviana.jpg/480px-Policia_Boliviana.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Bolivia_police.jpg/480px-Bolivia_police.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Polici%C3%ADa_boliviana.jpg/480px-Polici%C3%ADa_boliviana.jpg',
       'https://picsum.photos/seed/policiaboliviana/480/320'
     ],
-    'img-municipio': [
+    municipio: [
+      'https://www.gmsantacruz.gob.bo/images/portada-direccion-general-municipal_ok.png',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Alcald%C3%ADa_de_Santa_Cruz_de_la_Sierra_%28Bolivia%29.jpg/480px-Alcald%C3%ADa_de_Santa_Cruz_de_la_Sierra_%28Bolivia%29.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4e/Santa_Cruz_de_la_Sierra_Centro.jpg/480px-Santa_Cruz_de_la_Sierra_Centro.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Plaza_24_de_Septiembre_Santa_Cruz.jpg/480px-Plaza_24_de_Septiembre_Santa_Cruz.jpg',
       'https://picsum.photos/seed/santacruzcitybol/480/320'
     ],
-    'img-hospital': [
+    hospital: [
+      'https://pxcdn.reduno.com.bo/reduno/092025/1757346537818.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Hospital_Japon%C3%A9s_de_Santa_Cruz_de_la_Sierra.jpg/480px-Hospital_Japon%C3%A9s_de_Santa_Cruz_de_la_Sierra.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9d/Hospital_de_Cl%C3%ADnicas_La_Paz.jpg/480px-Hospital_de_Cl%C3%ADnicas_La_Paz.jpg',
       'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b4/HospitalBolivia.jpg/480px-HospitalBolivia.jpg',
@@ -1331,9 +1478,9 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
   };
 
   document.addEventListener('DOMContentLoaded', () => {
-    Object.entries(fallbacks).forEach(([id, urls]) => {
-      const img = document.getElementById(id);
-      if (!img) return;
+    document.querySelectorAll('img[data-photo]').forEach(img => {
+      const urls = photoSets[img.dataset.photo];
+      if (!urls) return;
       let idx = 0;
       img.onerror = function() {
         idx++;
@@ -1521,11 +1668,51 @@ function initLeafletMap() {
   draw();
 })();
 
-/* ── SLIDE 6: Bar animation ─────────────────────────────── */
+/* ── SLIDE 6: Asymmetric dot cloud ─────────────────────── */
 function triggerSlide6() {
-  setTimeout(() => {
-    document.getElementById('bar6').style.width = '75%';
-  }, 300);
+  const grid = document.getElementById('s6grid');
+  if (!grid || grid.children.length > 0) return;
+
+  // 10 filas de ancho variable + lean hacia la derecha → 100 puntos
+  // Suma: 4+8+11+13+14+14+13+11+8+4 = 100
+  const rows = [
+    { y:  5, w:  4, cx: 30 },
+    { y: 14, w:  8, cx: 36 },
+    { y: 24, w: 11, cx: 42 },
+    { y: 34, w: 13, cx: 48 },
+    { y: 45, w: 14, cx: 54 },
+    { y: 56, w: 14, cx: 58 },
+    { y: 67, w: 13, cx: 56 },
+    { y: 77, w: 11, cx: 52 },
+    { y: 87, w:  8, cx: 48 },
+    { y: 95, w:  4, cx: 44 },
+  ];
+
+  const stepX = 5.4;     // separación horizontal entre puntos (% del stage)
+  const hexShift = 2.7;  // offset hex en filas impares
+
+  let idx = 0;
+  for (let r = 0; r < rows.length; r++) {
+    const row = rows[r];
+    const offset = (r % 2) * hexShift;
+    const startX = row.cx - (row.w - 1) * stepX / 2 + offset;
+
+    for (let i = 0; i < row.w; i++) {
+      // jitter sutil para romper la grilla
+      const jitterX = (Math.sin(idx * 12.9898) * 43758.5453 % 1) * 1.2 - 0.6;
+      const jitterY = (Math.sin(idx * 78.233 ) * 12345.6789 % 1) * 1.2 - 0.6;
+      const x = startX + i * stepX + jitterX;
+      const y = row.y + jitterY;
+
+      const dot = document.createElement('div');
+      dot.className = 's6-dot';
+      dot.style.left = x + '%';
+      dot.style.top  = y + '%';
+      dot.style.animationDelay = (idx * 0.014) + 's';
+      grid.appendChild(dot);
+      idx++;
+    }
+  }
 }
 </script>
 
