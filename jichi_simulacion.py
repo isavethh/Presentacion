@@ -200,7 +200,7 @@ class JichiApp:
         self.prev_btn.config(state="normal" if i > 0 else "disabled")
         last = (i == len(PASOS) - 1)
         self.next_btn.config(state="normal", text="↺  Reiniciar" if last else "Siguiente  →")
-        self.counter.config(text=f"Paso {i + 1} de {len(PASOS)}   ·   ←  →   ·   F11 pantalla completa")
+        #self.counter.config(text=f"Paso {i + 1} de {len(PASOS)}   ·   ←  →   ·   F11 pantalla completa")
         self.steps[i]()
 
     def next(self):
@@ -214,12 +214,10 @@ class JichiApp:
     def card(self, parent, accent=LINE):
         return tk.Frame(parent, bg=PANEL, highlightbackground=accent, highlightthickness=1, bd=0)
 
-    def head(self, accent, label, title, intro):
+    def head(self, accent, label, title):
         tk.Label(self.content, text=label.upper(), font=self.F(9), fg=accent, bg=BG).pack(anchor="w")
         tk.Label(self.content, text=title, font=self.F(21), fg=WHITE, bg=BG,
-                 justify="left").pack(anchor="w", pady=(self.S(2), self.S(2)))
-        tk.Label(self.content, text=intro, font=self.F(11, False), fg=MUTED, bg=BG,
-                 justify="left", wraplength=int(BASE_W * self.scale) - 40).pack(anchor="w", pady=(0, self.S(10)))
+                 justify="left").pack(anchor="w", pady=(self.S(2), self.S(14)))
 
     def card_label(self, parent, text):
         tk.Label(parent, text=text.upper(), font=self.F(9), fg=MUTED2,
@@ -382,17 +380,12 @@ class JichiApp:
     # ═════════════════════════════ PASOS ═══════════════════════════════════
     def s_deteccion(self):
         self.head(RED, "Paso 1 · Detección",
-                  "Los sensores detectan algo fuera de lo normal",
-                  "Cuarto Anillo, entre la Av. Banzer y la Radial 17½. Los autos "
-                  "circulan muy por encima del límite y, al mismo tiempo, la "
-                  "Policía acumula atropellamientos en esa misma intersección.")
+                  "Los sensores detectan algo fuera de lo normal")
 
         row = tk.Frame(self.content, bg=BG); row.pack(fill="both", expand=True)
         c1 = self.card(row, RED); c1.pack(side="left", fill="both", expand=True, padx=(0, 8))
         self.card_label(c1, "Sensor de velocidad · Cuarto Anillo")
-        self.gauge(c1, 78, 120, 40, RED2).pack(pady=(0, self.S(2)))
-        tk.Label(c1, text="Promedio detectado · límite 40 km/h  (+95%)",
-                 font=self.F(9, False), fg=MUTED, bg=PANEL).pack(pady=(0, self.S(14)))
+        self.gauge(c1, 78, 120, 40, RED2).pack(pady=(0, self.S(14)))
 
         c2 = self.card(row, RED); c2.pack(side="left", fill="both", expand=True, padx=(8, 0))
         self.card_label(c2, "Registros de la Policía · 6 meses")
@@ -404,21 +397,14 @@ class JichiApp:
             tk.Canvas(r, width=self.S(12), height=self.S(12), bg=sw, highlightthickness=0).pack(side="left", padx=(0, 8))
             tk.Label(r, text=val, font=self.F(17), fg=WHITE, bg=PANEL).pack(side="left")
             tk.Label(r, text=" " + txt, font=self.F(11, False), fg=MUTED, bg=PANEL).pack(side="left")
-        tk.Label(leg, text="61% ocurre en horario nocturno", font=self.F(9, False),
-                 fg=MUTED2, bg=PANEL).pack(anchor="w", pady=(self.S(4), 0))
 
         al = self.card(self.content, RED); al.pack(fill="x", pady=(self.S(12), self.S(4)))
         tk.Label(al, text="⚠  ALERTA AUTOMÁTICA GENERADA POR JICHI", font=self.F(15),
-                 fg=RED2, bg=PANEL).pack(anchor="w", padx=self.S(16), pady=(self.S(12), self.S(2)))
-        tk.Label(al, text="Exceso de velocidad sostenido + alta siniestralidad nocturna en el mismo punto.",
-                 font=self.F(11, False), fg=MUTED, bg=PANEL).pack(anchor="w", padx=self.S(16), pady=(0, self.S(12)))
+                 fg=RED2, bg=PANEL).pack(anchor="w", padx=self.S(16), pady=self.S(14))
 
     def s_analisis(self):
         self.head(BLUE, "Paso 2 · Análisis",
-                  "JICHI cruza las fuentes de datos",
-                  "JICHI junta lo que miden los sensores con lo que registra la "
-                  "Policía y lanza la alerta. El equipo revisa los datos del "
-                  "Municipio y la causa se hace evidente.")
+                  "JICHI cruza las fuentes de datos")
 
         flow = self.card(self.content, BLUE); flow.pack(fill="x")
         self.card_label(flow, "Cruce de fuentes · tres bases de datos conectadas")
@@ -440,8 +426,7 @@ class JichiApp:
             lc.create_oval(x - S(10), S(5), x + S(10), S(25), fill=GOLD3 if on else "#2a3150", outline="")
             lc.create_line(x, S(25), x, S(38), fill="#3a4566", width=2)
             lc.create_text(x, S(47), text="ON" if on else "off", fill=GOLD3 if on else MUTED2, font=self.F(7))
-        tk.Label(cl, text="75% del corredor sin iluminación de noche",
-                 font=self.F(9, False), fg=MUTED, bg=PANEL).pack(pady=(self.S(2), self.S(12)))
+        tk.Frame(cl, bg=PANEL, height=S(12)).pack()
 
         cr = self.card(row, LINE); cr.pack(side="left", fill="both", expand=True, padx=(8, 0))
         self.card_label(cr, "Paso peatonal · sin pintura")
@@ -450,15 +435,11 @@ class JichiApp:
         for i in range(6):
             x = S(70 + i * 30)
             cc.create_rectangle(x, S(6), x + S(17), S(48), fill="#1c2138", outline="")
-        tk.Label(cr, text="Demarcación borrada · sin visibilidad nocturna",
-                 font=self.F(9, False), fg=MUTED, bg=PANEL).pack(pady=(self.S(2), self.S(12)))
+        tk.Frame(cr, bg=PANEL, height=S(12)).pack()
 
     def s_recomendacion(self):
         self.head(GOLD, "Paso 3 · Recomendación",
-                  "El informe llega al Comité con opciones y costos",
-                  "JICHI propone intervenciones priorizadas. Actúa como el "
-                  "Comité: marca o desmarca opciones y observa cómo cambian el "
-                  "costo total y el impacto proyectado en tiempo real.")
+                  "El informe llega al Comité con opciones y costos")
 
         wrap = tk.Frame(self.content, bg=BG); wrap.pack(fill="both", expand=True)
         c = self.card(wrap, GOLD); c.pack(side="left", fill="both", expand=True, padx=(0, 8))
@@ -489,7 +470,7 @@ class JichiApp:
             else:
                 self.round_rect(canvas, S(3), S(3), S(25), S(25), S(7), PANEL, "#46506e", 2)
 
-        for idx, (nombre, costo, detalle, _) in enumerate(OPCIONES):
+        for idx, (nombre, costo, _det, _imp) in enumerate(OPCIONES):
             var = self.opt_vars[idx]
             b = tk.Frame(c, bg=PANEL2, cursor="hand2"); b.pack(fill="x", padx=S(14), pady=S(5))
             chk = tk.Canvas(b, width=S(28), height=S(28), bg=PANEL2, highlightthickness=0)
@@ -497,17 +478,14 @@ class JichiApp:
             draw_check(chk, var)
             cost_lbl = tk.Label(b, text="Bs " + miles(costo), font=self.F(12), fg=GOLD3, bg=PANEL2)
             cost_lbl.pack(side="right", padx=S(14))
-            txt = tk.Frame(b, bg=PANEL2); txt.pack(side="left", fill="x", expand=True, pady=S(9))
-            name_lbl = tk.Label(txt, text=nombre, font=self.F(11), fg=WHITE, bg=PANEL2, anchor="w")
-            name_lbl.pack(anchor="w")
-            det_lbl = tk.Label(txt, text=detalle, font=self.F(9, False), fg=MUTED, bg=PANEL2, anchor="w")
-            det_lbl.pack(anchor="w")
+            name_lbl = tk.Label(b, text=nombre, font=self.F(11), fg=WHITE, bg=PANEL2, anchor="w")
+            name_lbl.pack(side="left", fill="x", expand=True, pady=S(11))
 
             def toggle(_e, v=var, ca=chk):
                 v.set(not v.get())
                 draw_check(ca, v)
                 recompute()
-            for wdg in (b, chk, txt, name_lbl, det_lbl, cost_lbl):
+            for wdg in (b, chk, name_lbl, cost_lbl):
                 wdg.bind("<Button-1>", toggle)
 
         tk.Frame(c, bg=LINE, height=1).pack(fill="x", padx=S(14), pady=(S(8), 0))
@@ -521,16 +499,12 @@ class JichiApp:
             tk.Label(f, text=nombre, font=self.F(11, False), fg=MUTED, bg=PANEL).pack(side="left")
             lbl = tk.Label(f, text="0%", font=self.F(16), fg=GREEN, bg=PANEL); lbl.pack(side="right")
             impact_lbls[key] = lbl
-        tk.Label(c2, text="Plan completo de referencia:\nBs 46.500  ·  −41% atropellos",
-                 font=self.F(9, False), fg=MUTED2, bg=PANEL, justify="left").pack(anchor="w", padx=S(16), pady=(S(20), S(16)))
 
         recompute()
 
     def s_decision(self):
         self.head(GREEN, "Paso 4 · Decisión",
-                  "El Comité aprueba la intervención",
-                  "El Comité revisa la evidencia y aprueba el plan. Se define "
-                  "responsable y plazo. Pulsa APROBAR para emitir la orden de ejecución.")
+                  "El Comité aprueba la intervención")
 
         S = self.S
         c = self.card(self.content, GREEN); c.pack(fill="x")
@@ -561,17 +535,17 @@ class JichiApp:
 
     def s_resultado(self):
         self.head(GREEN, "Paso 5 · Resultado",
-                  "Cuatro meses después, JICHI mide",
-                  "No es un reporte: es una decisión ejecutada y con resultados "
-                  "medibles en la misma intersección.")
+                  "Cuatro meses después, JICHI mide")
 
         S = self.S
         hero = self.card(self.content, GREEN); hero.pack(fill="x")
-        tk.Label(hero, text="CUATRO MESES DESPUÉS DE LA INTERVENCIÓN", font=self.F(9),
-                 fg=GREEN2, bg=PANEL).pack(pady=(S(14), 0))
-        big = tk.Label(hero, text="−0%", font=self.F(62), fg=GREEN, bg=PANEL); big.pack()
-        tk.Label(hero, text="menos atropellamientos en el corredor", font=self.F(15),
-                 fg=WHITE, bg=PANEL).pack(pady=(0, S(16)))
+        hb = tk.Frame(hero, bg=PANEL); hb.pack(pady=S(10))
+        big = tk.Label(hb, text="−0%", font=self.F(42), fg=GREEN, bg=PANEL)
+        big.pack(side="left", padx=(0, S(14)))
+        cap = tk.Frame(hb, bg=PANEL); cap.pack(side="left")
+        tk.Label(cap, text="CUATRO MESES DESPUÉS", font=self.F(8), fg=GREEN2, bg=PANEL).pack(anchor="w")
+        tk.Label(cap, text="menos atropellamientos en el corredor", font=self.F(12, False),
+                 fg=WHITE, bg=PANEL).pack(anchor="w")
         self.count(big, 41, dur=1.4, prefix="−", suffix="%")
 
         row = tk.Frame(self.content, bg=BG); row.pack(fill="both", expand=True, pady=(S(12), 0))
@@ -593,9 +567,7 @@ class JichiApp:
 
     def s_sostenibilidad(self):
         self.head(GOLD, "Paso 6 · Por qué funciona aquí",
-                  "Una decisión ejecutada, no un reporte",
-                  "JICHI está diseñado para seguir funcionando sin importar qué "
-                  "gobierno esté en turno.")
+                  "Una decisión ejecutada, no un reporte")
 
         S = self.S
         c = self.card(self.content, GOLD); c.pack(fill="both", expand=True)
