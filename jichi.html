@@ -945,7 +945,18 @@ canvas.bg { position:absolute; inset:0; opacity:.5; }
 <!-- ══════════════════════════════════════════════════════ -->
 <!-- SLIDE 1 — 409 MUERTES -->
 <!-- ══════════════════════════════════════════════════════ -->
-<section class="slide active" id="s1">
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- SLIDE 0 — PORTADA (misma imagen que el cierre) -->
+<!-- ══════════════════════════════════════════════════════ -->
+<section class="slide active" id="s0" style="padding:0; background:#08091f;">
+  <img
+    src="img/slide_final.png"
+    alt="Equipo JICHI"
+    style="width:100%; height:100%; object-fit:contain; object-position:center; display:block;"
+  >
+</section>
+
+<section class="slide" id="s1">
   <div class="pulse-ring"></div>
   <canvas class="s1-canvas" id="c1"></canvas>
 
@@ -1606,8 +1617,8 @@ function goTo(n) {
   dotsEl.children[cur].classList.add('active');
 
   // Trigger slide-specific animations
-  if (cur === 1) setTimeout(() => { initLeafletMap(); if (scMap) scMap.invalidateSize(); }, 50);
-  if (cur === 5) triggerSlide6();
+  if (cur === 2) setTimeout(() => { initLeafletMap(); if (scMap) scMap.invalidateSize(); }, 50);
+  if (cur === 6) triggerSlide6();
 }
 
 document.addEventListener('keydown', e => {
